@@ -31,23 +31,42 @@ class Box:
             self.rotation(2)
             self.rotation(1)
         elif (kind == 4):
-            self.rotation(3)
+            self.rotation(1)
+            self.rotation(2)
             self.rotation(2)
             self.rotation(0)
         elif (kind == 5):
-            self.rotation(4)
+            self.rotation(0)
+            self.rotation(2)
+            self.rotation(1)
+            self.rotation(0)
+        elif (kind == 6):
             self.rotation(0)
             self.rotation(1)
-        elif (kind == 6):
-            self.rotation(5)
-            self.rotation(0)
             self.rotation(1)
             self.rotation(2)
         elif (kind == 7):
-            self.rotation(6)
+            self.rotation(1)
+            self.rotation(2)
+            self.rotation(1)
+            self.rotation(2)
+        elif (kind == 8):
+            self.rotation(2)
+            self.rotation(1)
+            self.rotation(0)
+            self.rotation(1)
+        elif (kind == 9):
+            self.rotation(1)
+            self.rotation(0)
+            self.rotation(0)
+            self.rotation(2)
+        elif (kind == 10):
+            self.rotation(2)
+            self.rotation(0)
             self.rotation(0)
             self.rotation(1)
             self.rotation(2)
+
 
 
 
@@ -91,17 +110,18 @@ class Container:
         for i in range(self.h):
             for j in range(self.w):
                 for k in range(self.l):
-                    for ri in range(8):
+                    for ri in range(11):
                         box.rotation(ri)
                         if self.isFree([k, j, i], box):
                             box.position = [k, j, i]
                             box.color = COLOR
                             COLOR += 1
-                            print('YES')
+                            #print('YES')
                             # print(box.position)
                             return
                         elif (j==self.w-1) and (k==self.l-1):
-                            print(box.size, ri, [i,j,k])
+                            pass
+                            #print(box.size, ri, [i,j,k])
                             #box.rotation(ri)
 
 

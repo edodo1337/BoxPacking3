@@ -5,10 +5,10 @@ from drawing import *
 
 
 
-cont = Container(5,5,5)
+cont = Container(5,5,7)
 
-N = 35
-max_size = 3
+N = 15
+max_size = 4
 boxes = []
 
 for i in range(N):
@@ -20,14 +20,14 @@ for i in range(N):
     boxes.append(Box(size))
 
 
-#boxes.sort(key=lambda x: x.size[0]*x.size[1]*x.size[2], reverse=True)
+boxes.sort(key=lambda x: x.size[0]*x.size[1]*x.size[2], reverse=True)
 boxes.sort(key=lambda x: x.size[0]*x.size[1], reverse=True)
 
 
 for box in boxes:
     cont.put(box)
 
-cont.space_print()
+#cont.space_print()
 
 
 
