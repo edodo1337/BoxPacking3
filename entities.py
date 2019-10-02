@@ -21,10 +21,10 @@ class Box:
         if (kind == 0):
             self.size[1], self.size[0] = self.size[0], self.size[1]
         elif (kind == 1):
-            self.rotation(0)
+            #self.rotation(0)
             self.size[0], self.size[2] = self.size[2], self.size[0]
         elif (kind == 2):
-            self.rotation(1)
+            #self.rotation(1)
             self.size[1], self.size[2] = self.size[2], self.size[1]
         elif (kind == 3):
             self.rotation(2)

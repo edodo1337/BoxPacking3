@@ -7,8 +7,8 @@ from drawing import *
 
 cont = Container(5,5,7)
 
-N = 15
-max_size = 4
+N = 10
+max_size = 5
 boxes = []
 
 for i in range(N):
