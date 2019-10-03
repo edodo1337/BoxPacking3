@@ -7,54 +7,56 @@ sizes = []
 colors = []
 
 class Box:
+    fragile = None
     position = None
     size = None
     color = None
     num = None
-    def __init__(self, size):
+    def __init__(self, size, fragile):
         global count
         self.size = size
         self.num = count
+        self.fragile = fragile
         count += 1
 
     def rotation(self, kind):
-        if (kind == 0):
+        if (kind == 0): #X
             self.size[1], self.size[0] = self.size[0], self.size[1]
-        elif (kind == 1):
-            #self.rotation(0)
+        elif (kind == 1): #Y
+            self.rotation(0)
             self.size[0], self.size[2] = self.size[2], self.size[0]
-        elif (kind == 2):
-            #self.rotation(1)
+        elif (kind == 2): #Z
+            self.rotation(0)
+            self.rotation(1)
             self.size[1], self.size[2] = self.size[2], self.size[1]
-        elif (kind == 3):
-            self.rotation(2)
+        elif (kind == 3): #ZY
             self.rotation(2)
             self.rotation(1)
-        elif (kind == 4):
+        elif (kind == 4): #ZX
             self.rotation(1)
             self.rotation(2)
             self.rotation(2)
             self.rotation(0)
-        elif (kind == 5):
+        elif (kind == 5): #YX
             self.rotation(0)
             self.rotation(2)
             self.rotation(1)
             self.rotation(0)
-        elif (kind == 6):
+        elif (kind == 6): #YZ
             self.rotation(0)
             self.rotation(1)
             self.rotation(1)
             self.rotation(2)
-        elif (kind == 7):
+        elif (kind == 7): #XY
             self.rotation(1)
             self.rotation(2)
+            self.rotation(0)
             self.rotation(1)
-            self.rotation(2)
-        elif (kind == 8):
+        elif (kind == 8): #XZ
             self.rotation(2)
             self.rotation(1)
             self.rotation(0)
-            self.rotation(1)
+            self.rotation(2)
         elif (kind == 9):
             self.rotation(1)
             self.rotation(0)
@@ -100,7 +102,10 @@ class Container:
                         self.space[k][j][i] = box.color
             positions.append(box.position)
             sizes.append(box.size)
-            colors.append("C0{}".format(box.color))
+            if box.fragile:
+                colors.append((0.5,0.5,0.5,0.5))
+            else:
+                colors.append("C0{}".format(box.color))
         else:
             print('No place')
 
@@ -114,8 +119,11 @@ class Container:
                         box.rotation(ri)
                         if self.isFree([k, j, i], box):
                             box.position = [k, j, i]
-                            box.color = COLOR
-                            COLOR += 1
+                            if (box.fragile):
+                                box.color = 0.5
+                            else:
+                                box.color = COLOR
+                                COLOR += 1
                             #print('YES')
                             # print(box.position)
                             return
@@ -126,13 +134,33 @@ class Container:
 
 
     def isFree(self, position, box):
+        flag = True
+        left_side = 0
+        right_side = 0
         try:
             for i in range(position[2], position[2] + box.size[2]):  # Z
                 for j in range(position[1], position[1] + box.size[1]):  # Y
                     for k in range(position[0], position[0] + box.size[0]):  # X
+                        if (position[2] > 0):
+                            if (self.space[k][j][i-1]!=0):
+                                if j < (position[1] + box.size[1]) % 2 + 1:
+                                    left_side += 1
+                                else:
+                                    right_side += 1
+                                if k < (position[0] + box.size[0]) % 2 + 1:
+                                    left_side += 1
+                                else:
+                                    right_side += 1
+
+                            if (self.space[k][j][position[2]-1] == 0.5) or (self.space[k][j][position[2]+1] == 0.5):
+                                #print('FRAGILE')
+                                return False
                         if self.space[k][j][i]!=0:
                             return False
-            return True
+            if (right_side==0) or (left_side==0):
+                pass
+                #print(right_side, left_side)
+            return True and flag
         except:
             return False
 

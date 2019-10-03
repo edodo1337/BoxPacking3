@@ -7,21 +7,25 @@ from drawing import *
 
 cont = Container(5,5,7)
 
-N = 10
-max_size = 5
+N = 15
+max_size = 4
 boxes = []
 
 for i in range(N):
+    fragile = (np.random.choice(range(10), 1)) % 4 == 0
+    #fragile = True
+    #print(fragile)
     size = np.random.choice(range(1,max_size),3)
     if (size[0] < size[2]):
         size[0], size[2] = size[2], size[0]
     if (size[1] < size[2]):
         size[1], size[2] = size[2], size[1]
-    boxes.append(Box(size))
+    boxes.append(Box(size, fragile))
 
 
 boxes.sort(key=lambda x: x.size[0]*x.size[1]*x.size[2], reverse=True)
 boxes.sort(key=lambda x: x.size[0]*x.size[1], reverse=True)
+boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
 
 for box in boxes:
