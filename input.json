@@ -9,6 +9,22 @@
 
   {
     "type": "box",
+    "fragile": true,
+    "size": [1,1,1],
+    "color": null,
+    "position": null
+  },
+
+  {
+    "type": "box",
+    "fragile": true,
+    "size": [3,2,3],
+    "color": null,
+    "position": null
+  },
+
+  {
+    "type": "box",
     "fragile": false,
     "size": [2,3,3],
     "color": null,
@@ -51,8 +67,6 @@
     "type": "container",
     "size": [5,5,7]
   }
-
-
 
 
 

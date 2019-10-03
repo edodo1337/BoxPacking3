@@ -12,59 +12,58 @@ class Box:
     size = None
     color = None
     num = None
+    default_size = None
     def __init__(self, size, fragile):
         global count
         self.size = size
         self.num = count
         self.fragile = fragile
+        self.default_size = size
         count += 1
+
+    def load_default_size(self):
+        self.size = self.default_size
 
     def rotation(self, kind):
         if (kind == 0): #X
+            self.load_default_size()
             self.size[1], self.size[0] = self.size[0], self.size[1]
         elif (kind == 1): #Y
-            self.rotation(0)
+            self.load_default_size()
             self.size[0], self.size[2] = self.size[2], self.size[0]
         elif (kind == 2): #Z
-            self.rotation(0)
-            self.rotation(1)
+            self.load_default_size()
             self.size[1], self.size[2] = self.size[2], self.size[1]
         elif (kind == 3): #ZY
+            self.load_default_size()
             self.rotation(2)
             self.rotation(1)
         elif (kind == 4): #ZX
-            self.rotation(1)
-            self.rotation(2)
+            self.load_default_size()
             self.rotation(2)
             self.rotation(0)
         elif (kind == 5): #YX
-            self.rotation(0)
-            self.rotation(2)
+            self.load_default_size()
             self.rotation(1)
             self.rotation(0)
         elif (kind == 6): #YZ
-            self.rotation(0)
-            self.rotation(1)
+            self.load_default_size()
             self.rotation(1)
             self.rotation(2)
         elif (kind == 7): #XY
-            self.rotation(1)
-            self.rotation(2)
+            self.load_default_size()
             self.rotation(0)
             self.rotation(1)
         elif (kind == 8): #XZ
-            self.rotation(2)
-            self.rotation(1)
+            self.load_default_size()
             self.rotation(0)
             self.rotation(2)
         elif (kind == 9):
-            self.rotation(1)
-            self.rotation(0)
+            self.load_default_size()
             self.rotation(0)
             self.rotation(2)
         elif (kind == 10):
-            self.rotation(2)
-            self.rotation(0)
+            self.load_default_size()
             self.rotation(0)
             self.rotation(1)
             self.rotation(2)
@@ -117,6 +116,12 @@ class Container:
                 for k in range(self.l):
                     for ri in range(11):
                         box.rotation(ri)
+                        if box.fragile:
+                            if (box.size[0] > box.size[2]):
+                                box.size[0], box.size[2] = box.size[2], box.size[0]
+                            if (box.size[1] > box.size[2]):
+                                box.size[1], box.size[2] = box.size[2], box.size[1]
+
                         if self.isFree([k, j, i], box):
                             box.position = [k, j, i]
                             if (box.fragile):
@@ -160,10 +165,10 @@ class Container:
 
 
             if (position[2]>0):
-                print(box.fragile, counter)
-                if (counter < box.size[0]*box.size[1 // 2 + 1]):
+                print("Fragile", box.fragile, counter)
+                if (counter < (box.size[0]*box.size[1]) // 2 + 1 ):
                     flag = False
-                    print(flag)
+                    print("Flag", flag, box.size)
 
 
             return True and flag

@@ -5,17 +5,17 @@ import json
 
 #mode = int(input("Mode: "))
 
-mode = 1
+mode = 0
 boxes = []
 
 if mode==0:
-    cont = Container([5,5,7])
+    cont = Container([5,5,8])
     N = 15
     max_size = 4
 
     for i in range(N):
         fragile = (np.random.choice(range(10), 1)) % 4 == 0
-        # fragile = True
+        #fragile = True
         # print(fragile)
         size = np.random.choice(range(1, max_size), 3)
         if (not fragile):
@@ -28,6 +28,7 @@ if mode==0:
                 size[0], size[2] = size[2], size[0]
             if (size[1] > size[2]):
                 size[1], size[2] = size[2], size[1]
+
         boxes.append(Box(size, fragile))
 
 elif mode == 1:
