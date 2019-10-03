@@ -1,26 +1,61 @@
 from entities import *
 from drawing import *
+import json
 
 
+#mode = int(input("Mode: "))
 
-
-
-cont = Container(5,5,7)
-
-N = 15
-max_size = 4
+mode = 1
 boxes = []
 
-for i in range(N):
-    fragile = (np.random.choice(range(10), 1)) % 4 == 0
-    #fragile = True
-    #print(fragile)
-    size = np.random.choice(range(1,max_size),3)
-    if (size[0] < size[2]):
-        size[0], size[2] = size[2], size[0]
-    if (size[1] < size[2]):
-        size[1], size[2] = size[2], size[1]
-    boxes.append(Box(size, fragile))
+if mode==0:
+    cont = Container([5,5,7])
+    N = 15
+    max_size = 4
+
+    for i in range(N):
+        fragile = (np.random.choice(range(10), 1)) % 4 == 0
+        # fragile = True
+        # print(fragile)
+        size = np.random.choice(range(1, max_size), 3)
+        if (not fragile):
+            if (size[0] < size[2]):
+                size[0], size[2] = size[2], size[0]
+            if (size[1] < size[2]):
+                size[1], size[2] = size[2], size[1]
+        else:
+            if (size[0] > size[2]):
+                size[0], size[2] = size[2], size[0]
+            if (size[1] > size[2]):
+                size[1], size[2] = size[2], size[1]
+        boxes.append(Box(size, fragile))
+
+elif mode == 1:
+    f = open("input.json", "r").read()
+    f_json = json.loads(f)
+    boxes_json = []
+    cont = None
+
+    for i in f_json:
+        if i['type'] == "container":
+            cont = Container(i['size'])
+        if i['type'] == "box":
+            boxes_json.append(i)
+
+    for box in boxes_json:
+        size = box['size']
+        if not box['fragile']:
+            if (size[0] < size[2]):
+                size[0], size[2] = size[2], size[0]
+            if (size[1] < size[2]):
+                size[1], size[2] = size[2], size[1]
+        else:
+            if (size[0] > size[2]):
+                size[0], size[2] = size[2], size[0]
+            if (size[1] > size[2]):
+                size[1], size[2] = size[2], size[1]
+        boxes.append(Box(size, box['fragile']))
+
 
 
 boxes.sort(key=lambda x: x.size[0]*x.size[1]*x.size[2], reverse=True)
@@ -35,11 +70,6 @@ for box in boxes:
 
 
 
-# box1 = Box([4,5,4])
-# cont.put(box1)
-#
-# box2 = Box([5,1,2])
-# cont.put(box2)
 
 fig = plt.figure()
 ax = fig.gca(projection='3d')

@@ -74,11 +74,11 @@ class Box:
 
 
 class Container:
-    def __init__(self, l, w, h):
-        self.w = w
-        self.l = l
-        self.h = h
-        self.space = [[[0 for k in range(h)] for j in range(w)] for i in range(l)]
+    def __init__(self, size):
+        self.w = size[0]
+        self.l = size[1]
+        self.h = size[2]
+        self.space = [[[0 for k in range(self.h)] for j in range(self.w)] for i in range(self.l)]
 
 
     def space_print(self):
@@ -107,7 +107,7 @@ class Container:
             else:
                 colors.append("C0{}".format(box.color))
         else:
-            print('No place')
+            print('No place', box.fragile)
 
 
     def find(self, box):
@@ -137,29 +137,35 @@ class Container:
         flag = True
         left_side = 0
         right_side = 0
+        counter = 0
         try:
             for i in range(position[2], position[2] + box.size[2]):  # Z
                 for j in range(position[1], position[1] + box.size[1]):  # Y
                     for k in range(position[0], position[0] + box.size[0]):  # X
                         if (position[2] > 0):
                             if (self.space[k][j][i-1]!=0):
-                                if j < (position[1] + box.size[1]) % 2 + 1:
-                                    left_side += 1
-                                else:
-                                    right_side += 1
-                                if k < (position[0] + box.size[0]) % 2 + 1:
-                                    left_side += 1
-                                else:
-                                    right_side += 1
+                                counter += 1
+                                #print(k,j)
+                                # if (j < (position[1] + box.size[1]) // 2 +1) and (k < (position[0] + box.size[0]) // 2 + 1 ):
+                                #     left_side += 1
+                                # else:
+                                #     right_side += 1
+
 
                             if (self.space[k][j][position[2]-1] == 0.5) or (self.space[k][j][position[2]+1] == 0.5):
                                 #print('FRAGILE')
                                 return False
                         if self.space[k][j][i]!=0:
                             return False
-            if (right_side==0) or (left_side==0):
-                pass
-                #print(right_side, left_side)
+
+
+            if (position[2]>0):
+                print(box.fragile, counter)
+                if (counter < box.size[0]*box.size[1 // 2 + 1]):
+                    flag = False
+                    print(flag)
+
+
             return True and flag
         except:
             return False
