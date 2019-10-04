@@ -9,8 +9,8 @@ mode = 0
 boxes = []
 
 if mode==0:
-    cont = Container([5,5,8])
-    N = 15
+    cont = Container([7,7,7])
+    N = 25
     max_size = 4
 
     for i in range(N):

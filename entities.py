@@ -25,48 +25,50 @@ class Box:
         self.size = self.default_size
 
     def rotation(self, kind):
-        if (kind == 0): #X
+        if (kind == 0):
+            self.load_default_size()
+        elif (kind == 1): #X
             self.load_default_size()
             self.size[1], self.size[0] = self.size[0], self.size[1]
-        elif (kind == 1): #Y
+        elif (kind == 2): #Y
             self.load_default_size()
             self.size[0], self.size[2] = self.size[2], self.size[0]
-        elif (kind == 2): #Z
+        elif (kind == 3): #Z
             self.load_default_size()
             self.size[1], self.size[2] = self.size[2], self.size[1]
-        elif (kind == 3): #ZY
+        elif (kind == 4): #ZY
+            self.load_default_size()
+            self.rotation(3)
+            self.rotation(2)
+        elif (kind == 5): #ZX
+            self.load_default_size()
+            self.rotation(3)
+            self.rotation(1)
+        elif (kind == 6): #YX
             self.load_default_size()
             self.rotation(2)
             self.rotation(1)
-        elif (kind == 4): #ZX
+        elif (kind == 7): #YZ
             self.load_default_size()
             self.rotation(2)
-            self.rotation(0)
-        elif (kind == 5): #YX
-            self.load_default_size()
-            self.rotation(1)
-            self.rotation(0)
-        elif (kind == 6): #YZ
+            self.rotation(3)
+        elif (kind == 8): #XY
             self.load_default_size()
             self.rotation(1)
             self.rotation(2)
-        elif (kind == 7): #XY
+        elif (kind == 9): #XZ
             self.load_default_size()
-            self.rotation(0)
             self.rotation(1)
-        elif (kind == 8): #XZ
-            self.load_default_size()
-            self.rotation(0)
-            self.rotation(2)
-        elif (kind == 9):
-            self.load_default_size()
-            self.rotation(0)
-            self.rotation(2)
+            self.rotation(3)
         elif (kind == 10):
             self.load_default_size()
-            self.rotation(0)
+            self.rotation(1)
+            self.rotation(3)
+        elif (kind == 11):
+            self.load_default_size()
             self.rotation(1)
             self.rotation(2)
+            self.rotation(3)
 
 
 
@@ -114,14 +116,8 @@ class Container:
         for i in range(self.h):
             for j in range(self.w):
                 for k in range(self.l):
-                    for ri in range(11):
-                        box.rotation(ri)
-                        if box.fragile:
-                            if (box.size[0] > box.size[2]):
-                                box.size[0], box.size[2] = box.size[2], box.size[0]
-                            if (box.size[1] > box.size[2]):
-                                box.size[1], box.size[2] = box.size[2], box.size[1]
-
+                    for ri in range(12):
+                        #box.rotation(ri)
                         if self.isFree([k, j, i], box):
                             box.position = [k, j, i]
                             if (box.fragile):
@@ -132,10 +128,11 @@ class Container:
                             #print('YES')
                             # print(box.position)
                             return
-                        elif (j==self.w-1) and (k==self.l-1):
-                            pass
-                            #print(box.size, ri, [i,j,k])
-                            #box.rotation(ri)
+                        elif (j==self.w-1) or (k==self.l-1):
+                            box.rotation(ri)
+                            # print(i)
+                            # #print(box.size)
+                            # box.rotation(ri)
 
 
     def isFree(self, position, box):
@@ -164,9 +161,10 @@ class Container:
                             return False
 
 
+
             if (position[2]>0):
                 print("Fragile", box.fragile, counter)
-                if (counter < (box.size[0]*box.size[1]) // 2 + 1 ):
+                if (counter < (box.size[0]*box.size[1]) // 2 + 2 ):
                     flag = False
                     print("Flag", flag, box.size)
 
