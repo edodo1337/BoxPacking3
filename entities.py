@@ -1,4 +1,4 @@
-
+import copy
 COLOR = 1
 count = 1
 
@@ -13,16 +13,17 @@ class Box:
     color = None
     num = None
     default_size = None
-    def __init__(self, size, fragile):
+    def __init__(self, _size, fragile):
         global count
-        self.size = size
+        self.size = _size
         self.num = count
         self.fragile = fragile
-        self.default_size = size
+        self.default_size = _size[:]
         count += 1
 
     def load_default_size(self):
-        self.size = self.default_size
+        #print("DEFAULT", self.default_size, self.fragile)
+        self.size = self.default_size[:]
 
     def rotation(self, kind):
         if (kind == 0):
@@ -108,31 +109,29 @@ class Container:
             else:
                 colors.append("C0{}".format(box.color))
         else:
-            print('No place', box.fragile)
+            print('No place', box.fragile, box.size)
 
 
     def find(self, box):
         global COLOR
         for i in range(self.h):
-            for j in range(self.w):
-                for k in range(self.l):
-                    for ri in range(12):
-                        #box.rotation(ri)
-                        if self.isFree([k, j, i], box):
-                            box.position = [k, j, i]
-                            if (box.fragile):
-                                box.color = 0.5
+            for ri in range(12):
+                box.rotation(ri)
+                for j in range(self.w):
+                    for k in range(self.l):
+                            if self.isFree([k, j, i], box):
+                                box.position = [k, j, i]
+                                if (box.fragile):
+                                    box.color = 0.5
+                                else:
+                                    box.color = COLOR
+                                    COLOR += 1
+                                return
                             else:
-                                box.color = COLOR
-                                COLOR += 1
-                            #print('YES')
-                            # print(box.position)
-                            return
-                        elif (j==self.w-1) or (k==self.l-1):
-                            box.rotation(ri)
-                            # print(i)
-                            # #print(box.size)
-                            # box.rotation(ri)
+                                pass
+
+
+
 
 
     def isFree(self, position, box):
@@ -144,32 +143,30 @@ class Container:
             for i in range(position[2], position[2] + box.size[2]):  # Z
                 for j in range(position[1], position[1] + box.size[1]):  # Y
                     for k in range(position[0], position[0] + box.size[0]):  # X
-                        if (position[2] > 0):
-                            if (self.space[k][j][i-1]!=0):
+
+                        if (position[2]>0):
+                            if (self.space[k][j][i - 1] != 0):
                                 counter += 1
-                                #print(k,j)
-                                # if (j < (position[1] + box.size[1]) // 2 +1) and (k < (position[0] + box.size[0]) // 2 + 1 ):
-                                #     left_side += 1
-                                # else:
-                                #     right_side += 1
-
-
-                            if (self.space[k][j][position[2]-1] == 0.5) or (self.space[k][j][position[2]+1] == 0.5):
-                                #print('FRAGILE')
+                            if (self.space[k][j][position[2] - 1] == 0.5):
                                 return False
+                        if (position[2]!=self.h-1):
+                            if (self.space[k][j][position[2] + 1] == 0.5):
+                                return False
+
+
+
                         if self.space[k][j][i]!=0:
                             return False
 
 
 
             if (position[2]>0):
-                print("Fragile", box.fragile, counter)
-                if (counter < (box.size[0]*box.size[1]) // 2 + 2 ):
+                if (counter < (box.size[0]*box.size[1]) // 2 + 1 ):
                     flag = False
-                    print("Flag", flag, box.size)
 
 
             return True and flag
-        except:
+        except Exception as e:
+            print(str(e))
             return False
 

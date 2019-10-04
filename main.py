@@ -9,9 +9,9 @@ mode = 0
 boxes = []
 
 if mode==0:
-    cont = Container([7,7,7])
+    cont = Container([5,5,5])
     N = 25
-    max_size = 4
+    max_size = 3
 
     for i in range(N):
         fragile = (np.random.choice(range(10), 1)) % 4 == 0
@@ -55,6 +55,7 @@ elif mode == 1:
                 size[0], size[2] = size[2], size[0]
             if (size[1] > size[2]):
                 size[1], size[2] = size[2], size[1]
+        print(size, box['fragile'])
         boxes.append(Box(size, box['fragile']))
 
 
