@@ -1,172 +1,105 @@
-import copy
-COLOR = 1
-count = 1
+#BOX_COUNTER = 0
 
-positions = []
-sizes = []
-colors = []
 
-class Box:
-    fragile = None
-    position = None
-    size = None
-    color = None
-    num = None
-    default_size = None
-    def __init__(self, _size, fragile):
-        global count
-        self.size = _size
-        self.num = count
-        self.fragile = fragile
-        self.default_size = _size[:]
-        count += 1
+class BoxDatabase():
+    def __init__(self):
+        self.items = dict()
+        self.box_list = []
+        self.BOX_COUNTER = 0
 
-    def load_default_size(self):
-        #print("DEFAULT", self.default_size, self.fragile)
+    def put(self, *args):
+        for item in args:
+            self.BOX_COUNTER += 1
+            self.items[str(self.BOX_COUNTER)] = item
+            self.box_list.append(item)
+            item.id = self.BOX_COUNTER
+
+    def get(self, id):
+        return self.items.get(str(id))
+
+# class AbastractContainer:
+#     def __init__(self, size):
+#         self.size = size
+#         self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in range(self.size[0])]
+
+class AbstractBox:
+    def __init__(self, size, is_rotatableXYZ):
+        #global BOX_COUNTER
+        #BOX_COUNTER += 1
+        #self.id = BOX_COUNTER
+        self.size = size
+        self.default_size = size[:]
+        self.position = None
+        self.is_rotatableX = is_rotatableXYZ[0]
+        self.is_rotatableY = is_rotatableXYZ[1]
+        self.is_rotatableZ = is_rotatableXYZ[2]
+
+    def load_identity(self):
         self.size = self.default_size[:]
 
-    def rotation(self, kind):
-        if (kind == 0):
-            self.load_default_size()
-        elif (kind == 1): #X
-            self.load_default_size()
-            self.size[1], self.size[0] = self.size[0], self.size[1]
-        elif (kind == 2): #Y
-            self.load_default_size()
-            self.size[0], self.size[2] = self.size[2], self.size[0]
-        elif (kind == 3): #Z
-            self.load_default_size()
-            self.size[1], self.size[2] = self.size[2], self.size[1]
-        elif (kind == 4): #ZY
-            self.load_default_size()
-            self.rotation(3)
-            self.rotation(2)
-        elif (kind == 5): #ZX
-            self.load_default_size()
-            self.rotation(3)
-            self.rotation(1)
-        elif (kind == 6): #YX
-            self.load_default_size()
-            self.rotation(2)
-            self.rotation(1)
-        elif (kind == 7): #YZ
-            self.load_default_size()
-            self.rotation(2)
-            self.rotation(3)
-        elif (kind == 8): #XY
-            self.load_default_size()
-            self.rotation(1)
-            self.rotation(2)
-        elif (kind == 9): #XZ
-            self.load_default_size()
-            self.rotation(1)
-            self.rotation(3)
-        elif (kind == 10):
-            self.load_default_size()
-            self.rotation(1)
-            self.rotation(3)
-        elif (kind == 11):
-            self.load_default_size()
-            self.rotation(1)
-            self.rotation(2)
-            self.rotation(3)
+    def rotateX(self):
+        self.size[1], self.size[2] = self.size[2], self.size[1]
+
+    def rotateY(self):
+        self.size[0], self.size[2] = self.size[2], self.size[0]
+
+    def rotateZ(self):
+        self.size[0], self.size[1] = self.size[1], self.size[0]
 
 
+class Box(AbstractBox):
+    def __init__(self, size, mass, fragile, is_rotatebleXYZ):
+        super().__init__(size, is_rotatebleXYZ)
+        self.mass = mass
+        self.fragile = fragile
 
+class Barrel(AbstractBox):
+    def __init__(self, size, mass, fragile, is_rotatebleXYZ):
+        super().__init__(size, is_rotatebleXYZ)
+        self.mass = mass
+        self.fragile = fragile
 
-
+#
 class Container:
     def __init__(self, size):
-        self.w = size[0]
-        self.l = size[1]
-        self.h = size[2]
-        self.space = [[[0 for k in range(self.h)] for j in range(self.w)] for i in range(self.l)]
+        self.size = size
+        self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in range(self.size[0])]
 
+    def put(self, box, position):
+        for i in range(position[2], position[2] + box.size[2]):  # Z
+            for j in range(position[1], position[1] + box.size[1]):  # Y
+                for k in range(position[0], position[0] + box.size[0]):  # X
+                    self.space[k][j][i] = box.id
+        #box.position = position
 
     def space_print(self):
-        for i in range(self.h): #Z
-            for j in range(self.w): #Y
-                for k in range(self.l): #X
-                    print(self.space[k][j][i], end='\t')
+        for i in range(self.size[2]):  # Z
+            for j in range(self.size[1]):  # Y
+                for k in range(self.size[0]):  # X
+                    if self.space[k][j][i] == None:
+                        print('N', end='\t')
+                    else:
+                        print(self.space[k][j][i], end='\t')
                 print()
             print()
 
-    def put(self, box):
-        global positions
-        global sizes
-        global colors
 
-        self.find(box)
-        if (box.position!=None):
-            for i in range(box.position[2], box.position[2]+box.size[2]): #Z
-                for j in range(box.position[1], box.position[1]+box.size[1]): #Y
-                    for k in range(box.position[0], box.position[0]+box.size[0]): #X
-                        self.space[k][j][i] = box.color
-            positions.append(box.position)
-            sizes.append(box.size)
-            if box.fragile:
-                colors.append((0.5,0.5,0.5,0.5))
-            else:
-                colors.append("C0{}".format(box.color))
-        else:
-            print('No place', box.fragile, box.size)
+class Block(Container, AbstractBox):
+    def __init__(self, size, is_rotatebleXYZ):
+        AbstractBox.__init__(self, size=size, is_rotatableXYZ=is_rotatebleXYZ)
+        Container.__init__(self, size=size)
+        self.mass = 0
+        self.boxes = []
+        self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in range(self.size[0])]
 
+    def put(self, box, position):
+        super().put(box, position)
+        self.boxes.append(box)
+        self.mass += box.mass
 
-    def find(self, box):
-        global COLOR
-        for i in range(self.h):
-            for ri in range(12):
-                box.rotation(ri)
-                for j in range(self.w):
-                    for k in range(self.l):
-                            if self.isFree([k, j, i], box):
-                                box.position = [k, j, i]
-                                if (box.fragile):
-                                    box.color = 0.5
-                                else:
-                                    box.color = COLOR
-                                    COLOR += 1
-                                return
-                            else:
-                                pass
-
-
-
-
-
-    def isFree(self, position, box):
-        flag = True
-        left_side = 0
-        right_side = 0
-        counter = 0
-        try:
-            for i in range(position[2], position[2] + box.size[2]):  # Z
-                for j in range(position[1], position[1] + box.size[1]):  # Y
-                    for k in range(position[0], position[0] + box.size[0]):  # X
-
-                        if (position[2]>0):
-                            if (self.space[k][j][i - 1] != 0):
-                                counter += 1
-                            if (self.space[k][j][position[2] - 1] == 0.5):
-                                return False
-                        if (position[2]!=self.h-1):
-                            if (self.space[k][j][position[2] + 1] == 0.5):
-                                return False
-
-
-
-                        if self.space[k][j][i]!=0:
-                            return False
-
-
-
-            if (position[2]>0):
-                if (counter < (box.size[0]*box.size[1]) // 2 + 1 ):
-                    flag = False
-
-
-            return True and flag
-        except Exception as e:
-            print(str(e))
-            return False
+    def pop(self, box_id):
+        for idx, key in self.boxes:
+            if key == box_id:
+                self.boxes.pop(idx)
+                break
 

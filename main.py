@@ -1,89 +1,55 @@
 from entities import *
-from drawing import *
+from utils import *
 import json
 
 
-#mode = int(input("Mode: "))
+boxdb = BoxDatabase()
 
-mode = 0
-boxes = []
-
-if mode==0:
-    cont = Container([5,5,5])
-    N = 25
-    max_size = 3
-
-    for i in range(N):
-        fragile = (np.random.choice(range(10), 1)) % 4 == 0
-        #fragile = True
-        # print(fragile)
-        size = np.random.choice(range(1, max_size), 3)
-        if (not fragile):
-            if (size[0] < size[2]):
-                size[0], size[2] = size[2], size[0]
-            if (size[1] < size[2]):
-                size[1], size[2] = size[2], size[1]
-        else:
-            if (size[0] > size[2]):
-                size[0], size[2] = size[2], size[0]
-            if (size[1] > size[2]):
-                size[1], size[2] = size[2], size[1]
-
-        boxes.append(Box(size, fragile))
-
-elif mode == 1:
-    f = open("input.json", "r").read()
+def read_data(filename):
+    f = open(filename, "r").read()
     f_json = json.loads(f)
-    boxes_json = []
-    cont = None
 
-    for i in f_json:
-        if i['type'] == "container":
-            cont = Container(i['size'])
-        if i['type'] == "box":
-            boxes_json.append(i)
+    for item in f_json:
+        size = item['size']
+        mass = item['mass']
+        fragile = item['fragile']
+        is_rotatableXYZ = item['is_rotatableXYZ']
 
-    for box in boxes_json:
-        size = box['size']
-        if not box['fragile']:
-            if (size[0] < size[2]):
-                size[0], size[2] = size[2], size[0]
-            if (size[1] < size[2]):
-                size[1], size[2] = size[2], size[1]
-        else:
-            if (size[0] > size[2]):
-                size[0], size[2] = size[2], size[0]
-            if (size[1] > size[2]):
-                size[1], size[2] = size[2], size[1]
-        print(size, box['fragile'])
-        boxes.append(Box(size, box['fragile']))
+        boxdb.put(Box(size, mass, fragile, is_rotatableXYZ))
 
 
 
-boxes.sort(key=lambda x: x.size[0]*x.size[1]*x.size[2], reverse=True)
-boxes.sort(key=lambda x: x.size[0]*x.size[1], reverse=True)
-boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
+box1 = Box([1, 1, 1], 5, True, [True, True, True])
+box1.position = [2, 2, 2]
+box2 = Box([1, 1, 1], 5, True, [True, True, True])
+box2.position = [3,3,3]
+box3 = Box([1, 1, 1], 5, True, [True, True, True])
 
-for box in boxes:
-    cont.put(box)
+block = Block([3, 3, 3], [True, True, True])
 
+boxdb.put(box1, box2)
+#
+# cont = Container([7, 7, 7])
+#
+#
+# boxdb.box_list.sort(key=lambda x: obj3D_functional(x), reverse=True)
+# boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
+#
+# # print(block.id)
+# # block.put(box1, [0, 0, 0])
+# # block.put(box2, [1, 0, 0])
+# # block.put(box2, [2, 0, 0])
+# # cont.put(block, [0, 0, 0])
+# # cont.space_print()
+# # print(boxdb.get(1).size)
+#
+# for item in boxdb.box_list:
+#     pos = find_place(cont, item)
+#     print(pos)
+#     if pos!=None:
+#         cont.put(item, pos)
+#
 #cont.space_print()
 
-
-
-
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-
-pc = plotCubeAt(positions, sizes, colors=colors, edgecolor="k")
-ax.add_collection3d(pc)
-
-ax.set_xlim([0, cont.l])
-ax.set_ylim([0, cont.w])
-ax.set_zlim([0, cont.h])
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
-
-plt.show()
+write_positions(boxdb, "output.json")
