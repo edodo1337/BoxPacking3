@@ -71,8 +71,11 @@ def write_positions(boxdb, filename, cont):
     for i in range(cont.size[2]):  # Z
         for j in range(cont.size[1]):  # Y
             for k in range(cont.size[0]):  # X
-                output_list = []
+
                 box = boxdb.get(cont.space[k][j][i])
+                if box == None:
+                    continue
+
                 for box_dict in box.getattatrs():
                     output_list.append(box_dict)
 
