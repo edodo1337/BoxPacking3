@@ -1,5 +1,5 @@
 import json
-import entities
+from entities import *
 
 def obj2D_functional(box):
     k1 = 1
@@ -26,7 +26,6 @@ def find_place(container, box):
                     rotation = 1
 
                     while (not is_fit(box, container, [k, j, i])) and (rotation < 24):
-                        print(box.size)
                         box.tryRotations(rotation)
                         rotation += 1
 
@@ -54,31 +53,49 @@ def is_fit(box, container, position):
     return True
 
 
-
-def write_positions(boxdb, filename):
-    fout = open(filename, 'w')
-    output_list = []
-
-
-    for box in boxdb.box_list:
-        if box.position!=None:
-            output_dict = {}
-            output_dict['size'] = box.size
-            output_dict['position'] = [ box.position[0] + box.size[0] / 2,
-                                   box.position[1] + box.size[1] / 2,
-                                   box.position[2] + box.size[2] / 2
-                                   ]
-            output_list.append(output_dict)
-            output = json.dumps(output_list)
-
-    print(output)
-    fout.write(output)
-
 def is_balanced(box, cont, position):
+
     if position[2] == 0:
         return True
 
     centerX, centerY = (position[0] + box.size[0]) // 2, (position[1] + box.size[1]) // 2
 
-    return False if (cont[centerX, centerY, position[2] - 1] == None) else True
+    return False if (cont.space[centerX][centerY][position[2] - 1] == None) else True
 
+
+def write_positions(boxdb, filename, cont):
+    fout = open(filename, 'w')
+
+    output_list = []
+
+    for i in range(cont.size[2]):  # Z
+        for j in range(cont.size[1]):  # Y
+            for k in range(cont.size[0]):  # X
+                output_list = []
+                box = boxdb.get(cont.space[k][j][i])
+                for box_dict in box.getattatrs():
+                    output_list.append(box_dict)
+
+
+    output = json.dumps(output_list)
+    print(output)
+    fout.write(output)
+
+    # for box in boxdb.box_list:
+    #     if box.position!=None:
+    #         output_dict = {}
+    #         output_dict['size'] = box.size
+    #         output_dict['position'] = [
+    #                                box.position[0] + box.size[0] / 2,
+    #                                box.position[1] + box.size[1] / 2,
+    #                                box.position[2] + box.size[2] / 2
+    #                                ]
+    #         output_list.append(output_dict)
+    #         output = json.dumps(output_list)
+    #
+    # print(output)
+    # fout.write(output)
+
+
+def makeStack(boxes):
+    pass

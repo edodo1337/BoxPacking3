@@ -2,7 +2,7 @@ from entities import *
 from utils import *
 import json
 import random
-import numpy
+import numpy as np
 
 
 boxdb = BoxDatabase()
@@ -25,13 +25,15 @@ def read_data(filename):
 # box1 = Box([1, 2, 3], 5, True, [True, True, True])
 # box1.position = [0, 0, 0]
 
-boxdb.put(Box([1, 2, 3], 5, True, [True, True, True]))
-boxdb.put(Box([1, 2, 3], 5, True, [True, True, True]))
-boxdb.put(Box([4, 4, 2], 5, True, [True, True, True]))
-boxdb.put(Box([2, 1, 2], 5, True, [True, True, True]))
-boxdb.put(Box([7, 2, 3], 5, True, [True, True, True]))
-boxdb.put(Box([7, 2, 2], 5, True, [True, True, True]))
 
+# boxdb.put(Box([9, 9, 1], 5, True, [True, True, True]))
+# boxdb.put(Box([7, 2, 2], 5, True, [True, True, True]))
+# boxdb.put(Box([7, 2, 3], 5, True, [True, True, True]))
+
+for i in range(3):
+    #size = [random.choice(range(1,5))]*3
+    size = [5,1,1]
+    boxdb.put(Box(size, 5, True, [True, True, True]))
 
 boxdb.box_list.sort(key=lambda x: obj3D_functional(x), reverse=True)
 boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
@@ -40,8 +42,6 @@ boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
 cont = Container([10, 10, 10])
 
 box1 = boxdb.get(1)
-
-
 
 
 for i in boxdb.box_list:
@@ -56,4 +56,4 @@ for i in boxdb.box_list:
 
 
 
-write_positions(boxdb, "PackerOUT/public/static/output.json")
+write_positions(boxdb, "PackerOUT/public/static/output.json", cont)

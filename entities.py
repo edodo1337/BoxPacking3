@@ -81,6 +81,16 @@ class Box(AbstractBox):
         self.mass = mass
         self.fragile = fragile
 
+    def getattatrs(self):
+        output_dict = {}
+        output_dict['size'] = self.size
+        output_dict['position'] = [
+                               self.position[0] + self.size[0] / 2,
+                               self.position[1] + self.size[1] / 2,
+                               self.position[2] + self.size[2] / 2
+                               ]
+
+        return [output_dict]
 
 
 
@@ -133,4 +143,15 @@ class Block(Container, AbstractBox):
             if key == box_id:
                 self.boxes.pop(idx)
                 break
+
+    def getattrs(self):
+
+        output_list = []
+        for box in self.boxes:
+            output_list.append(box.getattrs())
+
+        return output_list
+
+
+
 
