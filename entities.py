@@ -46,12 +46,43 @@ class AbstractBox:
     def rotateZ(self):
         self.size[0], self.size[1] = self.size[1], self.size[0]
 
+    def tryRotations(self, var):
+        a = lambda: None
+        rotations = {
+            '0': a,
+            '1': self.rotateX,
+            '2': self.rotateY,
+            '3': self.rotateZ,
+        }
+        done = False
+        counter = 0
+
+        for i in rotations.keys():
+            if done:
+                break
+            for j in rotations.keys():
+                if done:
+                    break
+                for k in rotations.keys():
+                    if counter > var - 1:
+                        done = True
+                        break
+                    else:
+                        rotations[k]()
+                        rotations[j]()
+                        rotations[i]()
+                        counter += 1
+
+
 
 class Box(AbstractBox):
     def __init__(self, size, mass, fragile, is_rotatebleXYZ):
         super().__init__(size, is_rotatebleXYZ)
         self.mass = mass
         self.fragile = fragile
+
+
+
 
 class Barrel(AbstractBox):
     def __init__(self, size, mass, fragile, is_rotatebleXYZ):
