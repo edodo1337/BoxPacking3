@@ -35,15 +35,19 @@ boxdb.put(Box([2, 2, 2], 5, True, [True] * 3))
 boxdb.put(Box([2, 2, 2], 5, True, [True] * 3))
 boxdb.put(Box([2, 2, 2], 5, True, [True] * 3))
 boxdb.put(Box([2, 2, 2], 5, True, [True] * 3))
+boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
+boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
+boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
 
 
 
 
 
-# for i in boxdb.box_list:
-#     pos = find_place(cont, i)
-#     if pos!=None:
-#         cont.put(i, pos)
+
+for i in boxdb.box_list:
+    pos = find_place(cont, i)
+    if pos!=None:
+        cont.put(i, pos)
 
 boxes = []
 for i in range(2):
@@ -51,7 +55,7 @@ for i in range(2):
     size = [2,1,1]
     boxes.append(Box(size, 5, True, [True, True, True]))
 
-boxes.append(Box([1,1,1], 5, True, [True, True, True]))
+boxes.append(Box([1, 1, 1], 5, True, [True, True, True]))
 
 
 for i in boxes:
@@ -64,15 +68,13 @@ block.put(boxes[1], [0, 1, 0])
 block.put(boxes[2], [2, 0, 0])
 
 
-block.rotateZ()
+
+
 block.rotateX()
-
-
-
 
 position = find_place(cont, block)
 print(position)
-cont.put(block, [1,1,1])
+cont.put(block, position)
 
 
 

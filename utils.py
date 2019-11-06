@@ -26,9 +26,9 @@ def find_place(container, box):
                 if container.space[k][j][i] == None:
                     rotation = 1
 
-                    while (not is_fit(box, container, [k, j, i])) and (rotation < 24):
-                        box.tryRotations(rotation)
-                        rotation += 1
+                    # while (not is_fit(box, container, [k, j, i])) and (rotation < 24):
+                    #     box.tryRotations(rotation)
+                    #     rotation += 1
 
                     if is_fit(box, container, [k, j, i]) and is_balanced(box, container, [k, j, i]):
                         return [k, j, i]
@@ -111,8 +111,8 @@ def makeStack(boxes):
 Rx = np.array(
     [
         [1, 0, 0],
-        [0, 0, 1],
-        [0, -1, 0]
+        [0, 0, -1],
+        [0, 1, 0]
     ]
 )
 
