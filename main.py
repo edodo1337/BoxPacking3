@@ -38,6 +38,7 @@ cont = Container([6, 6, 3])
 
 block = Block([3,3,1], [True]*3)
 
+
 for ind, i in enumerate(boxes):
     block.put(i, [ind, 0, 0])
 
@@ -47,6 +48,8 @@ cont.put(block, [1, 0, 0])
 
 box = Box([1,1,1], 5, True, [True]*3)
 boxdb.put(box)
+
+block.rotateZ()
 
 cont.put(box, [0,1,0])
 

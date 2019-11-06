@@ -1,5 +1,6 @@
 import json
 from entities import *
+import numpy as np
 
 def obj2D_functional(box):
     k1 = 1
@@ -103,3 +104,31 @@ def write_positions(boxdb, filename, cont):
 
 def makeStack(boxes):
     pass
+
+
+
+
+Rx = np.array(
+    [
+        [1, 0, 0],
+        [0, 0, -1],
+        [0, 1, 0]
+    ]
+)
+
+
+Ry = np.array(
+    [
+        [0, 0, 1],
+        [0, 1, 0],
+        [-1, 0, 0]
+    ]
+)
+
+Rz = np.array(
+    [
+        [0, -1, 0],
+        [1, 0, 0],
+        [0, 0, 1]
+    ]
+)

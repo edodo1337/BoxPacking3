@@ -1,5 +1,6 @@
 #BOX_COUNTER = 0
-
+import numpy as np
+from utils import Rx, Ry, Rz
 
 class BoxDatabase():
     def __init__(self):
@@ -167,7 +168,27 @@ class Block(Container, AbstractBox):
             box.position = [i+j for i,j in zip(box.position, self.position)]
 
 
+    def load_identity(self):
+        pass
 
+    def rotateX(self):
+        AbstractBox.rotateX(self)
+        for box in self.boxes:
+            box.rotateX()
+            box.putOnPos((Rx.dot(box.position)).tolist())
+
+
+    def rotateY(self):
+        AbstractBox.rotateY(self)
+        for box in self.boxes:
+            box.rotateY()
+            box.putOnPos((Ry.dot(box.position)).tolist())
+
+    def rotateZ(self):
+        AbstractBox.rotateZ(self)
+        for box in self.boxes:
+            box.rotateZ()
+            box.putOnPos((Rz.dot(box.position)).tolist())
 
 
 
