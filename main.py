@@ -22,9 +22,9 @@ def read_data(filename):
 
 
 boxes = []
-for i in range(6):
+for i in range(2):
     #size = [random.choice(range(1,5))]*3
-    size = [1,1,1]
+    size = [2,1,1]
     boxes.append(Box(size, 5, True, [True, True, True]))
 
 for i in boxes:
@@ -37,12 +37,14 @@ boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
 cont = Container([5, 5, 5])
 
 block = Block([3,3,1], [True]*3)
+block.put(boxes[0], [0,0,0])
+block.put(boxes[1], [0,1,0])
 
 
-for ind, i in enumerate(boxes[:3]):
-    block.put(i, [ind, 0, 0])
-for ind, i in enumerate(boxes[3:]):
-    block.put(i, [0, ind, 0])
+# for ind, i in enumerate(boxes[:3]):
+#     block.put(i, [ind, 0, 0])
+# for ind, i in enumerate(boxes[3:]):
+#     block.put(i, [0, ind, 0])
 
 
 
@@ -50,14 +52,17 @@ boxdb.put(block)
 
 cont.put(block, [1, 0, 0])
 
-box = Box([1,1,1], 5, True, [True]*3)
-boxdb.put(box)
+box1 = Box([1,1,1], 5, True, [True]*3)
+box2 = Box([1,1,1], 5, True, [True]*3)
+boxdb.put(box1, box2)
 
-#block.rotateX()
+print(block.size)
+#block.rotateZ()
+print(block.size)
 
-cont.put(box, [1,0,1])
+cont.put(box1, [3, 1, 1])
+cont.put(box2, [3, 0, 1])
 
-
-cont.space_print()
+#cont.space_print()
 
 write_positions(boxdb, "PackerOUT/public/static/output.json", cont)

@@ -177,7 +177,6 @@ class Block(Container, AbstractBox):
             box.rotateX()
             box.putOnPos((Rx.dot(box.position)).tolist())
 
-
     def rotateY(self):
         AbstractBox.rotateY(self)
         for box in self.boxes:
