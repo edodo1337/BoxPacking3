@@ -65,7 +65,6 @@ def is_balanced(box, cont, position):
 
 def write_positions(boxdb, filename, cont):
     fout = open(filename, 'w')
-
     output_list = []
 
     for i in range(cont.size[2]):  # Z
@@ -73,12 +72,14 @@ def write_positions(boxdb, filename, cont):
             for k in range(cont.size[0]):  # X
 
                 box = boxdb.get(cont.space[k][j][i])
+
                 if box == None:
                     continue
 
-                for box_dict in box.getattatrs():
+                for box_dict in box.getattrs():
                     output_list.append(box_dict)
 
+                boxdb.pop(box.id)
 
     output = json.dumps(output_list)
     print(output)

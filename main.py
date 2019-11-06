@@ -27,25 +27,28 @@ for i in range(3):
     size = [1,1,1]
     boxes.append(Box(size, 5, True, [True, True, True]))
 
+for i in boxes:
+    boxdb.put(i)
+
 boxdb.box_list.sort(key=lambda x: obj3D_functional(x), reverse=True)
 boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
 
 
-cont = Container([3, 3, 3])
+cont = Container([6, 6, 3])
 
-block = Block([2,2,2], [True]*3)
+block = Block([3,3,1], [True]*3)
 
 for ind, i in enumerate(boxes):
     block.put(i, [ind, 0, 0])
 
 boxdb.put(block)
 
-for i in boxdb.box_list:
-    pos = find_place(cont, i)
-    if pos != None:
-        i.position = pos
-        cont.put(i, i.position)
+cont.put(block, [1, 0, 0])
 
+box = Box([1,1,1], 5, True, [True]*3)
+boxdb.put(box)
+
+cont.put(box, [0,1,0])
 
 
 cont.space_print()

@@ -17,6 +17,9 @@ class BoxDatabase():
     def get(self, id):
         return self.items.get(str(id))
 
+    def pop(self, id):
+        self.items[str(id)] = None
+
 # class AbastractContainer:
 #     def __init__(self, size):
 #         self.size = size
@@ -80,8 +83,10 @@ class Box(AbstractBox):
         super().__init__(size, is_rotatebleXYZ)
         self.mass = mass
         self.fragile = fragile
+        self.id = None
 
-    def getattatrs(self):
+
+    def getattrs(self):
         output_dict = {}
         output_dict['size'] = self.size
         output_dict['position'] = [
@@ -91,6 +96,9 @@ class Box(AbstractBox):
                                ]
 
         return [output_dict]
+
+    def putOnPos(self, position):
+        self.position = position
 
 
 
@@ -111,7 +119,8 @@ class Container:
             for j in range(position[1], position[1] + box.size[1]):  # Y
                 for k in range(position[0], position[0] + box.size[0]):  # X
                     self.space[k][j][i] = box.id
-        #box.position = position
+
+        box.putOnPos(position)
 
     def space_print(self):
         for i in range(self.size[2]):  # Z
@@ -145,12 +154,21 @@ class Block(Container, AbstractBox):
                 break
 
     def getattrs(self):
-
         output_list = []
         for box in self.boxes:
-            output_list.append(box.getattrs())
+            output_list.append(box.getattrs()[0])
 
         return output_list
+
+    def putOnPos(self, position):
+        self.position = position
+
+        for box in self.boxes:
+            box.position = [i+j for i,j in zip(box.position, self.position)]
+
+
+
+
 
 
 
