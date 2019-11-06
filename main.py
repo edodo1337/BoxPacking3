@@ -22,7 +22,7 @@ def read_data(filename):
 
 
 boxes = []
-for i in range(3):
+for i in range(6):
     #size = [random.choice(range(1,5))]*3
     size = [1,1,1]
     boxes.append(Box(size, 5, True, [True, True, True]))
@@ -34,13 +34,17 @@ boxdb.box_list.sort(key=lambda x: obj3D_functional(x), reverse=True)
 boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
 
 
-cont = Container([6, 6, 3])
+cont = Container([5, 5, 5])
 
 block = Block([3,3,1], [True]*3)
 
 
-for ind, i in enumerate(boxes):
+for ind, i in enumerate(boxes[:3]):
     block.put(i, [ind, 0, 0])
+for ind, i in enumerate(boxes[3:]):
+    block.put(i, [0, ind, 0])
+
+
 
 boxdb.put(block)
 
@@ -49,9 +53,9 @@ cont.put(block, [1, 0, 0])
 box = Box([1,1,1], 5, True, [True]*3)
 boxdb.put(box)
 
-block.rotateZ()
+#block.rotateX()
 
-cont.put(box, [0,1,0])
+cont.put(box, [1,0,1])
 
 
 cont.space_print()
