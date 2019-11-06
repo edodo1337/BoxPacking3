@@ -34,7 +34,7 @@ boxdb.box_list.sort(key=lambda x: obj3D_functional(x), reverse=True)
 boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
 
 
-cont = Container([5, 5, 5])
+cont = Container([10, 10, 5])
 
 block = Block([3,3,1], [True]*3)
 block.put(boxes[0], [0,0,0])
@@ -50,18 +50,19 @@ block.put(boxes[1], [0,1,0])
 
 boxdb.put(block)
 
-cont.put(block, [1, 0, 0])
 
-box1 = Box([1,1,1], 5, True, [True]*3)
-box2 = Box([1,1,1], 5, True, [True]*3)
+
+box1 = Box([1, 1, 1], 5, True, [True] * 3)
+box2 = Box([1, 1, 1], 5, True, [True] * 3)
 boxdb.put(box1, box2)
 
-print(block.size)
-#block.rotateZ()
-print(block.size)
+block.rotateY()
 
-cont.put(box1, [3, 1, 1])
-cont.put(box2, [3, 0, 1])
+cont.put(block, [1, 0, 0])
+
+
+cont.put(box1, [3, 1, 0])
+cont.put(box2, [3, 0, 0])
 
 #cont.space_print()
 

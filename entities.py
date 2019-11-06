@@ -158,12 +158,10 @@ class Block(Container, AbstractBox):
         output_list = []
         for box in self.boxes:
             output_list.append(box.getattrs()[0])
-
         return output_list
 
     def putOnPos(self, position):
         self.position = position
-
         for box in self.boxes:
             box.position = [i+j for i,j in zip(box.position, self.position)]
 
@@ -174,20 +172,23 @@ class Block(Container, AbstractBox):
     def rotateX(self):
         AbstractBox.rotateX(self)
         for box in self.boxes:
-            box.rotateX()
+            self.putOnPos([0, 0, 0])
             box.putOnPos((Rx.dot(box.position)).tolist())
+            box.rotateX()
 
     def rotateY(self):
         AbstractBox.rotateY(self)
         for box in self.boxes:
-            box.rotateY()
+            self.putOnPos([0, 0, 0])
             box.putOnPos((Ry.dot(box.position)).tolist())
+            box.rotateY()
 
     def rotateZ(self):
         AbstractBox.rotateZ(self)
         for box in self.boxes:
-            box.rotateZ()
+            self.putOnPos([0, 0, 0])
             box.putOnPos((Rz.dot(box.position)).tolist())
+            box.rotateZ()
 
 
 
