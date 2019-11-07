@@ -71,7 +71,6 @@ def write_positions(boxdb, filename, cont):
     for i in range(cont.size[2]):  # Z
         for j in range(cont.size[1]):  # Y
             for k in range(cont.size[0]):  # X
-
                 box = boxdb.get(cont.space[k][j][i])
 
                 if box == None:
@@ -119,9 +118,9 @@ Rx = np.array(
 
 Ry = np.array(
     [
-        [0, 0, -1],
+        [0, 0, 1],
         [0, 1, 0],
-        [1, 0, 0]
+        [-1, 0, 0]
     ]
 )
 
@@ -129,6 +128,31 @@ Rz = np.array(
     [
         [0, -1, 0],
         [1, 0, 0],
+        [0, 0, 1]
+    ]
+)
+
+Qx = np.array(
+    [
+        [1, 0, 0],
+        [0, 0, 1],
+        [0, -1, 0]
+    ]
+)
+
+
+Qy = np.array(
+    [
+        [0, 0, -1],
+        [0, 1, 0],
+        [1, 0, 0]
+    ]
+)
+
+Qz = np.array(
+    [
+        [0, 1, 0],
+        [-1, 0, 0],
         [0, 0, 1]
     ]
 )
