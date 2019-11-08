@@ -68,19 +68,20 @@ def write_positions(boxdb, filename, cont):
     fout = open(filename, 'w')
     output_list = []
 
-    # for i in range(cont.size[2]):  # Z
-    #     for j in range(cont.size[1]):  # Y
-    #         for k in range(cont.size[0]):  # X
-    #             box = boxdb.get(cont.space[k][j][i])
-    #             if box == None:
-    #                 continue
-    #             for box_dict in box.getattrs():
-    #                 output_list.append(box_dict)
-    #
-    #             boxdb.remove(box.id)
-    for box in boxdb.items.values():
-        for box_dict in box.getattrs():
-            output_list.append(box_dict)
+    for i in range(cont.size[2]):  # Z
+        for j in range(cont.size[1]):  # Y
+            for k in range(cont.size[0]):  # X
+                box = boxdb.get(cont.space[k][j][i])
+                if box == None:
+                    continue
+                for box_dict in box.getattrs():
+                    output_list.append(box_dict)
+                boxdb.remove(box.id)
+
+    # for box in boxdb.items.values():
+    #     if box.position != None:
+    #         for box_dict in box.getattrs():
+    #             output_list.append(box_dict)
 
 
     output = json.dumps(output_list)

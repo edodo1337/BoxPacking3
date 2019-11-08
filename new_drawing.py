@@ -36,6 +36,10 @@ def cuboid_data(cube_definition):
         [points[0], points[2], points[4], points[1]],
         [points[3], points[6], points[7], points[5]]
     ]
+    # edges = np.array(edges).astype(float)
+    # pos = np.array([1,1,1])
+    # edges += pos
+
     return edges
 
 

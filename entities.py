@@ -77,7 +77,6 @@ class AbstractBox:
         global global_box_counter
         return global_box_counter
 
-
     def load_identity(self):
         self.size = self.default_size[:]
         self.diag = [1,1,1]
@@ -94,6 +93,20 @@ class AbstractBox:
         self.size[0], self.size[1] = self.size[1], self.size[0]
         self.diag = (Rz.dot(self.diag)).tolist()
 
+    def rotateX(self):
+        self.size[1], self.size[2] = self.size[2], self.size[1]
+        self.diag = (Qx.dot(self.diag)).tolist()
+
+    def rotateY(self):
+        self.size[0], self.size[2] = self.size[2], self.size[0]
+        self.diag = (Qy.dot(self.diag)).tolist()
+
+    def rotateZ(self):
+        self.size[0], self.size[1] = self.size[1], self.size[0]
+        self.diag = (Qz.dot(self.diag)).tolist()
+
+
+
     def tryRotations(self, var):
         a = lambda: None
         rotations = {
@@ -101,6 +114,9 @@ class AbstractBox:
             '1': self.rotateX,
             '2': self.rotateY,
             '3': self.rotateZ,
+            '4': self.rotateXi,
+            '5': self.rotateYi,
+            '6': self.rotateZi
         }
         done = False
         counter = 0
@@ -139,9 +155,9 @@ class Box(AbstractBox):
         ]
 
         output_dict['diag'] = [
-            self.position[0] + self.diag[0],
-            self.position[1] + self.diag[1],
-            self.position[2] + self.diag[2]
+            self.diag[0],
+            self.diag[1],
+            self.diag[2]
         ]
 
         return [output_dict]
@@ -190,13 +206,12 @@ class Block(AbstractContainer, AbstractBox):
         pass
 
     def rotateX(self):
-        AbstractBox.rotateX(self)
+        temp = self.position[:]
         for box in self.items.values():
-            self.putOnPos([0, 0, 0])
-
-            box.putOnPos((Rx.dot(box.position)).tolist())
+            self.putOnPos([self.size[0]/2, self.size[1]/2, self.size[2]/2])
+            AbstractBox.rotateX(self)
             box.rotateX()
-            self.position = (Rx.dot(self.position)).tolist()
+        self.position = temp
 
     def rotateY(self):
         AbstractBox.rotateY(self)

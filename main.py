@@ -29,14 +29,19 @@ def read_data(filename):
 
 
 
-boxdb.add(Box([4,2,2], 5, [True], [True]*3))
+boxdb.add(Box([2,1,1], 5, [True], [True]*3))
+boxdb.add(Box([1,1,1], 5, [True], [True]*3))
 
-box = boxdb.get(0)
-box.rotateX()
-print(box.diag)
+block = Block([2,2,2], [True]*3)
+block.put(boxdb.get(0), [0,0,0])
+block.put(boxdb.get(1), [1,0,0])
+boxdb.add(block)
 
+#block.space_print()
 cont = Container([4, 4, 4])
-cont.put(box, [0, 0, 0])
+boxdb.get(0).rotateY()
+cont.put(boxdb.get(0), [2, 1, 3])
+cont.space_print()
 
 write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
 
