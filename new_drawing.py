@@ -3,8 +3,11 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import random
+from entities import *
+import json
 
-def plot_cube(cube_definition):
+
+def cuboid_data(cube_definition):
     cube_definition_array = [
         np.array(list(item))
         for item in cube_definition
@@ -33,16 +36,38 @@ def plot_cube(cube_definition):
         [points[0], points[2], points[4], points[1]],
         [points[3], points[6], points[7], points[5]]
     ]
+    return edges
+
+
+def plotCubeAt(boxes, colors, **kwargs):
+    g = []
+    for box in boxes:
+        g.append(cuboid_data(box))
+
+    return Poly3DCollection(np.concatenate(g),
+                            facecolors=np.repeat(colors, 6, axis=0), **kwargs)
+
+
+def draw(filename):
+    fin = open(filename, 'r')
+    data = json.load(fin)
+    boxes = []
+
+    for i in data:
+        pos = tuple(i['position'])
+        x_pos = [x0 + x for x0, x in zip(pos, (i['diag'][0], 0, 0))]
+        y_pos = [y0 + y for y0, y in zip(pos, (0, i['diag'][1], 0))]
+        z_pos = [z0 + z for z0, z in zip(pos, (0, 0, i['diag'][2]))]
+
+        boxes.append([pos, x_pos, y_pos, z_pos])
+
+    colors = [np.random.rand(3, ) for i in range(len(boxes))]
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    faces = Poly3DCollection(edges, linewidths=1, edgecolors='k')
-    color = [random.uniform(0,1) for i in range(3)]
-    color.append(1)
-    faces.set_facecolor(color)
-
-    ax.add_collection3d(faces)
+    pc = plotCubeAt(boxes, colors=colors, edgecolor="k")
+    ax.add_collection3d(pc)
     ax.set_xlim([0, 8])
     ax.set_ylim([0, 8])
     ax.set_zlim([0, 8])
@@ -50,13 +75,6 @@ def plot_cube(cube_definition):
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
-    # Plot the points themselves to force the scaling of the axes
-    ax.scatter(points[:,0], points[:,1], points[:,2], s=0)
-
     plt.show()
 
-
-cube_definition = [
-    (0,0,0), (0,1,0), (1,0,0), (0,0,1)
-]
-plot_cube(cube_definition)
+# draw("PackerOUT/public/static/output.json")

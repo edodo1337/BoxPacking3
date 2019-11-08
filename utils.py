@@ -68,35 +68,26 @@ def write_positions(boxdb, filename, cont):
     fout = open(filename, 'w')
     output_list = []
 
-    for i in range(cont.size[2]):  # Z
-        for j in range(cont.size[1]):  # Y
-            for k in range(cont.size[0]):  # X
-                box = boxdb.get(cont.space[k][j][i])
-                if box == None:
-                    continue
-                for box_dict in box.getattrs():
-                    output_list.append(box_dict)
+    # for i in range(cont.size[2]):  # Z
+    #     for j in range(cont.size[1]):  # Y
+    #         for k in range(cont.size[0]):  # X
+    #             box = boxdb.get(cont.space[k][j][i])
+    #             if box == None:
+    #                 continue
+    #             for box_dict in box.getattrs():
+    #                 output_list.append(box_dict)
+    #
+    #             boxdb.remove(box.id)
+    for box in boxdb.items.values():
+        for box_dict in box.getattrs():
+            output_list.append(box_dict)
 
-                boxdb.remove(box.id)
 
     output = json.dumps(output_list)
     print(output)
     fout.write(output)
 
-    # for box in boxdb.box_list:
-    #     if box.position!=None:
-    #         output_dict = {}
-    #         output_dict['size'] = box.size
-    #         output_dict['position'] = [
-    #                                box.position[0] + box.size[0] / 2,
-    #                                box.position[1] + box.size[1] / 2,
-    #                                box.position[2] + box.size[2] / 2
-    #                                ]
-    #         output_list.append(output_dict)
-    #         output = json.dumps(output_list)
-    #
-    # print(output)
-    # fout.write(output)
+
 
 
 def makeStack(boxes):

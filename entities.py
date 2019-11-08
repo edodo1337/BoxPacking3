@@ -132,12 +132,17 @@ class Box(AbstractBox):
 
     def getattrs(self):
         output_dict = {}
-        output_dict['size'] = self.size
         output_dict['position'] = [
-                               self.position[0], #+ self.size[0] / 2,
-                               self.position[1], #+ self.size[1] / 2,
-                               self.position[2], #+ self.size[2] / 2
-                               ]
+            self.position[0],
+            self.position[1],
+            self.position[2],
+        ]
+
+        output_dict['diag'] = [
+            self.position[0] + self.diag[0],
+            self.position[1] + self.diag[1],
+            self.position[2] + self.diag[2]
+        ]
 
         return [output_dict]
 

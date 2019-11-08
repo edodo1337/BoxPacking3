@@ -5,6 +5,8 @@ import random
 import numpy as np
 from drawing import draw
 from settings import global_box_counter
+import new_drawing
+
 boxdb = BoxDatabase()
 
 def read_data(filename):
@@ -28,36 +30,14 @@ def read_data(filename):
 
 
 boxdb.add(Box([4,2,2], 5, [True], [True]*3))
-boxdb.add(Box([2,2,2], 5, [True], [True]*3))
-boxdb.add(Box([2,2,2], 5, [True], [True]*3))
-
-block = Block([6, 6, 4], [True] * 3)
-block.put(boxdb.get(0), [0,0,0])
-block.put(boxdb.get(1), [2,0,0])
-block.put(boxdb.get(2), [0,0,2])
-
-boxdb.add(block)
-#block.space_print()
 
 box = boxdb.get(0)
-box.rotateZ()
+box.rotateX()
 print(box.diag)
 
+cont = Container([4, 4, 4])
+cont.put(box, [0, 0, 0])
 
-# cont = Container([4, 4, 4])
-#
-# block.rotateZ()
-# boxdb.get(0).rotateZ()
-# cont.put(boxdb.get(0), [0,0,0])
-# #cont.put(block, [0, 0, 0])
-#
-#
-# #cont.pop(block)
-#
-# #cont.space_print()
-# print('BOX COUNT', Box.get_count())
-#
-#
-# write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
-#
-# draw("PackerOUT/public/static/output.json")
+write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
+
+new_drawing.draw("PackerOUT/public/static/output.json")
