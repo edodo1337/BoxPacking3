@@ -72,14 +72,12 @@ def write_positions(boxdb, filename, cont):
         for j in range(cont.size[1]):  # Y
             for k in range(cont.size[0]):  # X
                 box = boxdb.get(cont.space[k][j][i])
-
                 if box == None:
                     continue
-
                 for box_dict in box.getattrs():
                     output_list.append(box_dict)
 
-                boxdb.pop(box.id)
+                boxdb.remove(box.id)
 
     output = json.dumps(output_list)
     print(output)

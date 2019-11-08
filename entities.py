@@ -1,27 +1,27 @@
-#BOX_COUNTER = 0
 import numpy as np
 from copy import copy
 from utils import Rx, Ry, Rz, Qx, Qy, Qz
-GLOBAL_COUNTER = 1
+from settings import global_box_counter
+
+
 
 class BoxDatabase():
     def __init__(self):
         self.items = dict()
-        self.box_list = []
-        self.BOX_COUNTER = 0
 
-    def put(self, *args):
+    def add(self, *args):
         for item in args:
-            self.BOX_COUNTER += 1
-            self.items[str(self.BOX_COUNTER)] = item
-            self.box_list.append(item)
-            item.id = self.BOX_COUNTER
+            self.items[str(item.id)] = item
+
 
     def get(self, id):
         return self.items.get(str(id))
 
-    def pop(self, id):
-        self.items[str(id)] = None
+    def remove(self, id):
+        box = self.get(str(id))
+        del box
+        del self.items[str(id)]
+
 
 class AbstractContainer:
     def __init__(self, size):
@@ -41,7 +41,9 @@ class AbstractContainer:
         for i in range(box.position[2], box.position[2] + box.size[2]):  # Z
             for j in range(box.position[1], box.position[1] + box.size[1]):  # Y
                 for k in range(box.position[0], box.position[0] + box.size[0]):  # X
-                    self.space[k][j][i] = box.id
+                    self.space[k][j][i] = None
+
+        del self.items[str(box.id)]
 
     def space_print(self):
         for i in range(self.size[2]):  # Z
@@ -58,16 +60,23 @@ class AbstractContainer:
 
 class AbstractBox:
     def __init__(self, size, is_rotatableXYZ):
-        #global BOX_COUNTER
-        #BOX_COUNTER += 1
-        #self.id = BOX_COUNTER
-        self.id
         self.size = size
+        global global_box_counter
+        global_box_counter += 1
+        self.id = global_box_counter - 1
+        #print('ID', self.id)
         self.default_size = size[:]
         self.position = None
+        self.diag_position = None
         self.is_rotatableX = is_rotatableXYZ[0]
         self.is_rotatableY = is_rotatableXYZ[1]
         self.is_rotatableZ = is_rotatableXYZ[2]
+
+    @staticmethod
+    def get_count():
+        global global_box_counter
+        return global_box_counter
+
 
     def load_identity(self):
         self.size = self.default_size[:]
@@ -115,7 +124,6 @@ class Box(AbstractBox):
         super().__init__(size, is_rotatebleXYZ)
         self.mass = mass
         self.fragile = fragile
-        self.id = None
 
 
     def getattrs(self):
@@ -159,13 +167,13 @@ class Block(AbstractContainer, AbstractBox):
 
     def getattrs(self):
         output_list = []
-        for box in self.items:
+        for box in self.items.values():
             output_list.append(box.getattrs()[0])
         return output_list
 
     def putOnPos(self, position):
         self.position = position
-        for box in self.items:
+        for box in self.items.values():
             box.position = [i+j for i,j in zip(box.position, self.position)]
 
 
@@ -174,7 +182,7 @@ class Block(AbstractContainer, AbstractBox):
 
     def rotateX(self):
         AbstractBox.rotateX(self)
-        for box in self.items:
+        for box in self.items.values():
             self.putOnPos([0, 0, 0])
             box.putOnPos((Rx.dot(box.position)).tolist())
             box.rotateX()
@@ -182,20 +190,22 @@ class Block(AbstractContainer, AbstractBox):
 
     def rotateY(self):
         AbstractBox.rotateY(self)
-        for box in self.items:
-            self.putOnPos([0, 0, 0])
+        self.putOnPos([-self.size[0] / 2, -self.size[1] / 2, -self.size[2] / 2])
+        for box in self.items.values():
             box.putOnPos((Ry.dot(box.position)).tolist())
             box.rotateY()
-            self.position = (Ry.dot(self.position)).tolist()
-
+        #self.position = (Ry.dot(self.position)).tolist()
+        self.putOnPos([self.size[0]/2, self.size[1]/2, self.size[2]/2])
 
     def rotateZ(self):
         AbstractBox.rotateZ(self)
+        self.putOnPos([-self.size[0] / 2, -self.size[1] / 2, -self.size[2] / 2])
         for box in self.items.values():
-            temp = copy(box)
-            print(box.id)
-            #del self.items[box.id]
-            self.pop(box)
+            box.putOnPos((Rz.dot(box.position)).tolist())
+            box.rotateZ()
+        # self.position = (Ry.dot(self.position)).tolist()
+        self.putOnPos([self.size[0] / 2, self.size[1] / 2, self.size[2] / 2])
+
 
 
 

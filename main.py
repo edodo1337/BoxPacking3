@@ -4,8 +4,7 @@ import json
 import random
 import numpy as np
 from drawing import draw
-
-
+from settings import global_box_counter
 boxdb = BoxDatabase()
 
 def read_data(filename):
@@ -27,63 +26,32 @@ def read_data(filename):
 # boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
 
 
-cont = Container([15, 15, 15])
 
+boxdb.add(Box([2,1,1], 5, [True], [True]*3))
+boxdb.add(Box([1,1,1], 5, [True], [True]*3))
+boxdb.add(Box([1,1,1], 5, [True], [True]*3))
 
-boxdb.put(Box([4, 4, 4], 5, True, [True] * 3))
-boxdb.put(Box([4, 4, 4], 5, True, [True] * 3))
-boxdb.put(Box([4, 4, 4], 5, True, [True] * 3))
-boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
-boxdb.put(Box([1, 2, 1], 5, True, [True] * 3))
-boxdb.put(Box([2, 2, 2], 5, True, [True] * 3))
-boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
-boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
-boxdb.put(Box([1, 1, 1], 5, True, [True] * 3))
+block = Block([2, 2, 2], [True] * 3)
+block.put(boxdb.get(0), [0,0,0])
+block.put(boxdb.get(1), [1,0,0])
+block.put(boxdb.get(2), [0,0,1])
 
-
-
-
-
-
-# for i in boxdb.box_list:
-#     pos = find_place(cont, i)
-#     if pos!=None:
-#         cont.put(i, pos)
-
-boxes = []
-for i in range(2):
-    #size = [random.choice(range(1,5))]*3
-    size = [6,2,2]
-    boxes.append(Box(size, 5, True, [True, True, True]))
-
-boxes.append(Box([1, 1, 1], 5, True, [True, True, True]))
-
-
-for i in boxes:
-    boxdb.put(i)
-
-block = Block([6, 4, 2], [True] * 3)
-boxdb.put(block)
-block.put(boxes[0], [0, 0, 0])
-block.put(boxes[1], [0, 2, 0])
-
-
-
-
-
+boxdb.add(block)
 #block.space_print()
 
+cont = Container([4, 4, 4])
+
 block.rotateZ()
+boxdb.get(0).rotateZ()
+cont.put(boxdb.get(0), [0,0,0])
+#cont.put(block, [0, 0, 0])
 
 
-
-# position = find_place(cont, block)
-# print(position)
-cont.put(block, [0,0,0])
-
-
+#cont.pop(block)
 
 #cont.space_print()
+print('BOX COUNT', Box.get_count())
+
 
 write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
 
