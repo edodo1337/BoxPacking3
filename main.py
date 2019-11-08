@@ -27,32 +27,37 @@ def read_data(filename):
 
 
 
-boxdb.add(Box([2,1,1], 5, [True], [True]*3))
-boxdb.add(Box([1,1,1], 5, [True], [True]*3))
-boxdb.add(Box([1,1,1], 5, [True], [True]*3))
+boxdb.add(Box([4,2,2], 5, [True], [True]*3))
+boxdb.add(Box([2,2,2], 5, [True], [True]*3))
+boxdb.add(Box([2,2,2], 5, [True], [True]*3))
 
-block = Block([2, 2, 2], [True] * 3)
+block = Block([6, 6, 4], [True] * 3)
 block.put(boxdb.get(0), [0,0,0])
-block.put(boxdb.get(1), [1,0,0])
-block.put(boxdb.get(2), [0,0,1])
+block.put(boxdb.get(1), [2,0,0])
+block.put(boxdb.get(2), [0,0,2])
 
 boxdb.add(block)
 #block.space_print()
 
-cont = Container([4, 4, 4])
-
-block.rotateZ()
-boxdb.get(0).rotateZ()
-cont.put(boxdb.get(0), [0,0,0])
-#cont.put(block, [0, 0, 0])
+box = boxdb.get(0)
+box.rotateZ()
+print(box.diag)
 
 
-#cont.pop(block)
-
-#cont.space_print()
-print('BOX COUNT', Box.get_count())
-
-
-write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
-
-draw("PackerOUT/public/static/output.json")
+# cont = Container([4, 4, 4])
+#
+# block.rotateZ()
+# boxdb.get(0).rotateZ()
+# cont.put(boxdb.get(0), [0,0,0])
+# #cont.put(block, [0, 0, 0])
+#
+#
+# #cont.pop(block)
+#
+# #cont.space_print()
+# print('BOX COUNT', Box.get_count())
+#
+#
+# write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
+#
+# draw("PackerOUT/public/static/output.json")

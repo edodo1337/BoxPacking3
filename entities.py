@@ -67,7 +67,7 @@ class AbstractBox:
         #print('ID', self.id)
         self.default_size = size[:]
         self.position = None
-        self.diag_position = None
+        self.diag = [self.size[0], self.size[1], self.size[2]]
         self.is_rotatableX = is_rotatableXYZ[0]
         self.is_rotatableY = is_rotatableXYZ[1]
         self.is_rotatableZ = is_rotatableXYZ[2]
@@ -80,15 +80,19 @@ class AbstractBox:
 
     def load_identity(self):
         self.size = self.default_size[:]
+        self.diag = [1,1,1]
 
     def rotateX(self):
         self.size[1], self.size[2] = self.size[2], self.size[1]
+        self.diag = (Rx.dot(self.diag)).tolist()
 
     def rotateY(self):
         self.size[0], self.size[2] = self.size[2], self.size[0]
+        self.diag = (Ry.dot(self.diag)).tolist()
 
     def rotateZ(self):
         self.size[0], self.size[1] = self.size[1], self.size[0]
+        self.diag = (Rz.dot(self.diag)).tolist()
 
     def tryRotations(self, var):
         a = lambda: None
@@ -184,6 +188,7 @@ class Block(AbstractContainer, AbstractBox):
         AbstractBox.rotateX(self)
         for box in self.items.values():
             self.putOnPos([0, 0, 0])
+
             box.putOnPos((Rx.dot(box.position)).tolist())
             box.rotateX()
             self.position = (Rx.dot(self.position)).tolist()

@@ -48,9 +48,9 @@ def draw(filename):
     pc = plotCubeAt(positions, sizes, colors=colors, edgecolor="k")
     ax.add_collection3d(pc)
 
-    ax.set_xlim([0, 5])
-    ax.set_ylim([0, 5])
-    ax.set_zlim([0, 5])
+    ax.set_xlim([0, 15])
+    ax.set_ylim([0, 15])
+    ax.set_zlim([0, 15])
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
