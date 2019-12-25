@@ -176,7 +176,7 @@ def is_fit(box, container, position, box_dict):
 
 
 def is_balanced(box, cont, position):
-#       сбалансированность корокбки, пока считает просто: чтоб под центром тяжести что-то было
+#       сбалансированность корокбки, пока считает просто: чтоб под центром тяжести что-то было (этого недостаточно)
 
     # return True
 
@@ -195,11 +195,8 @@ def is_balanced(box, cont, position):
 
 
 def is_intersect(box1, box2, position):
-    pass
-
-
-
 #        не используется
+    pass
 #     plane1_XY = [(0, 0), (box1.diag[0], box1.diag[1])]
 #     plane1_XZ = [(0, 0), (box1.diag[0], box1.diag[2])]
 #     plane1_YZ = [(0, 0), (box1.diag[1], box1.diag[2])]

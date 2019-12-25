@@ -4,7 +4,7 @@
     "mass": 5,
     "fragile": false,
     "size": [2,1,1],
-    "count": 8,
+    "count": 15,
     "is_rotatableXYZ": [true, true, true]
   },
 
@@ -13,8 +13,8 @@
     "mass": 5,
     "fragile": false,
     "size": [2,3,1],
-    "count": 8,
-    "is_rotatableXYZ": [true, true, true]
+    "count": 15,
+    "is_rotatableXYZ": [false, false, true]
   },
 
   {
@@ -22,7 +22,7 @@
     "mass": 5,
     "fragile": false,
     "size": [2,1,4],
-    "count": 8,
+    "count": 15,
     "is_rotatableXYZ": [true, true, true]
   },
 
@@ -31,7 +31,7 @@
     "mass": 5,
     "fragile": true,
     "size": [2,2,2],
-    "count": 4,
+    "count": 5,
     "is_rotatableXYZ": [true, true, true]
   },
 

@@ -232,18 +232,8 @@ class Block(AbstractContainer, AbstractBox):
 
     def put(self, box, position):
         super().put(box, position)
-        #print(self.position)
-        #box.relative_position = [i - j for i, j in zip(box.position, self.position)]
         box.relative_position = position
-        # self.items.append(box)
         self.mass += box.mass
-
-    # def pop(self, box_id):
-    #     for idx, key in self.items:
-    #         if key == box_id:
-    #             self.items.pop(idx)
-    #             break
-
 
     def getattrs(self):
     # метод для получения выходных данных json

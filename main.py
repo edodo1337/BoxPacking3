@@ -54,7 +54,16 @@ for ind, box in enumerate(boxes):
     pos = find_place(cont, box, box_dict)
     if pos is not None:
         cont.put(box, pos)
-
+#
+# boxes = [Box([2,2,1], 5, [False], [True] * 3)] * 4
+# box_dict = { box.id:box for box in boxes }
+# size = boxes[0].size
+# print(size)
+# block = Block([size[2], size[1], size[0]], [True]*3)
+# for box in boxes:
+#     pos = find_place(block, box, box_dict)
+#
+# cont.put(block)
 
 write_positions("output.json", boxes)
 
