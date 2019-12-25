@@ -101,27 +101,31 @@ class AbstractBox:
         self.diag = [self.size[0], self.size[1], self.size[2]]
 
     def rotateX(self):
-        self.size[1], self.size[2] = self.size[2], self.size[1]
-        if self.position:
-            self.position = (Rx.dot(self.position)).tolist()
-        self.diag = (Rx.dot(self.diag)).tolist()
-        self.diag = [ abs(i) for i in self.diag ]
+        if self.is_rotatableX:
+            self.size[1], self.size[2] = self.size[2], self.size[1]
+            if self.position:
+                self.position = (Rx.dot(self.position)).tolist()
+            self.diag = (Rx.dot(self.diag)).tolist()
+            self.diag = [ abs(i) for i in self.diag ]
 
     def rotateY(self):
-        self.size[0], self.size[2] = self.size[2], self.size[0]
-        if self.position:
-            self.position = (Ry.dot(self.position)).tolist()
-        self.diag = (Ry.dot(self.diag)).tolist()
-        self.diag = [abs(i) for i in self.diag]
+        if self.is_rotatableY:
+            self.size[0], self.size[2] = self.size[2], self.size[0]
+            if self.position:
+                self.position = (Ry.dot(self.position)).tolist()
+            self.diag = (Ry.dot(self.diag)).tolist()
+            self.diag = [abs(i) for i in self.diag]
 
     def rotateZ(self):
-        self.size[0], self.size[1] = self.size[1], self.size[0]
-        if self.position:
-            self.position = (Rz.dot(self.position)).tolist()
-        self.diag = (Rz.dot(self.diag)).tolist()
-        self.diag = [abs(i) for i in self.diag]
+        if self.is_rotatableZ:
+            self.size[0], self.size[1] = self.size[1], self.size[0]
+            if self.position:
+                self.position = (Rz.dot(self.position)).tolist()
+            self.diag = (Rz.dot(self.diag)).tolist()
+            self.diag = [abs(i) for i in self.diag]
 
-    # вращения в обратную сторону
+
+    #       вращения в обратную сторону (не используется)
     def rotateXi(self):
         self.size[1], self.size[2] = self.size[2], self.size[1]
         if self.position:
