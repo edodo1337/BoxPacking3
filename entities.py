@@ -5,9 +5,9 @@ from settings import global_box_counter
 import math
 
 # размеры контейнера
-CONT_X = 7
-CONT_Y = 7
-CONT_Z = 7
+CONT_X = 12
+CONT_Y = 12
+CONT_Z = 12
 
 
 

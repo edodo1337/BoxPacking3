@@ -73,10 +73,11 @@ def draw(filename, SIZE_X, SIZE_Y, SIZE_Z, boxes):
     #colors = [np.random.rand(3, ) for i in range(len(box_data))]
     colors = []
     for box in boxes:
-        if box.fragile:
-            colors.append((0.5, 0.5, 0.5, 0.5))
-        else:
-            colors.append(np.random.rand(3, ))
+        if box.position is not None:
+            if box.fragile:
+                colors.append((0.5, 0.5, 0.5, 0.5))
+            else:
+                colors.append(np.random.rand(3, ))
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

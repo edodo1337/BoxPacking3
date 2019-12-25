@@ -2,7 +2,7 @@ from entities import *
 from utils import *
 import json
 import new_drawing
-
+import random
 
 #boxdb = BoxDatabase()
 
@@ -33,12 +33,11 @@ def read_data(filename):
 
 
 
-read_data('input.json')
+#read_data('input.json')
 
-# max_size = 6
-# for i in range(5):
-#     boxes.append(Box([random.randint(max_size // 4, max_size) for i in range(3)], 5, [False], [True] * 3))
-
+max_size = 6
+for i in range(25):
+    boxes.append(Box([random.randint(max_size // 4, max_size) for i in range(3)], 5, False, [False] * 3))
 
 #сортировка по размеру
 boxes.sort(key=lambda x: x.size[0] * x.size[1] * x.size[2], reverse=True)
