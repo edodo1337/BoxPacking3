@@ -6,8 +6,12 @@ import numpy as np
 from drawing import draw
 from settings import global_box_counter
 import new_drawing
+import random
 
 boxdb = BoxDatabase()
+
+
+
 
 def read_data(filename):
     f = open(filename, "r").read()
@@ -23,26 +27,33 @@ def read_data(filename):
 
 
 
-
-# boxdb.box_list.sort(key=lambda x: obj3D_functional(x), reverse=True)
-# boxdb.box_list.sort(key=lambda x: obj2D_functional(x), reverse=True)
+cont = Container([CONT_X, CONT_Y, CONT_Z])
 
 
+boxes = []
 
-boxdb.add(Box([2,1,1], 5, [True], [True]*3))
-boxdb.add(Box([1,1,1], 5, [True], [True]*3))
+max_size = 5
+for i in range(9):
+    boxes.append(Box([random.randint(1, max_size) for i in range(3)], 5, [True], [True] * 3))
+    #boxes.append(Box([2,2,3], 5, [True], [True] * 3))
 
-block = Block([2,2,2], [True]*3)
-block.put(boxdb.get(0), [0,0,0])
-block.put(boxdb.get(1), [1,0,0])
-boxdb.add(block)
 
-#block.space_print()
-cont = Container([4, 4, 4])
-boxdb.get(0).rotateY()
-cont.put(boxdb.get(0), [2, 1, 3])
-cont.space_print()
+#сортировка по размеру
+boxes.sort(key=lambda x: x.size[0] * x.size[1] * x.size[2], reverse=True)
+boxes.sort(key=lambda x: x.size[0] * x.size[1], reverse=True)
+boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
-write_positions(boxdb, "PackerOUT/public/static/output.json", cont)
 
-new_drawing.draw("PackerOUT/public/static/output.json")
+
+box_dict = { box.id:box for box in boxes }
+
+for box in boxes:
+    pos = find_place(cont, box, box_dict)
+    if pos is not None:
+        cont.put(box, pos)
+
+
+write_positions("output.json", boxes)
+
+# new_drawing.draw("PackerOUT/public/static/output.json")
+new_drawing.draw("output.json", CONT_X, CONT_Y, CONT_Z)

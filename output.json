@@ -1,1 +1,1 @@
-[{"size": [1, 1, 1], "position": [3, 3, 3]}, {"size": [1, 1, 1], "position": [3, 3, 3]}]
+[{"position": [0, 0, 0], "diag": [4, 5, 2]}, {"position": [4, 5, 2], "diag": [-4, -5, 1]}, {"position": [0, 0, 3], "diag": [4, 4, 3]}, {"position": [5, 4, 6], "diag": [-5, 2, -3]}, {"position": [4, 4, 6], "diag": [1, 2, -2]}, {"position": [4, 4, 6], "diag": [1, 1, -2]}]

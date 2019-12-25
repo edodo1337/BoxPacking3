@@ -5,7 +5,12 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import random
 from entities import *
 import json
+from entities import CONT_X, CONT_Y, CONT_Z
 
+
+########
+# Рисование вокселями в matplotlib
+#######
 
 def cuboid_data(cube_definition):
     cube_definition_array = [
@@ -52,7 +57,7 @@ def plotCubeAt(boxes, colors, **kwargs):
                             facecolors=np.repeat(colors, 6, axis=0), **kwargs)
 
 
-def draw(filename):
+def draw(filename, SIZE_X, SIZE_Y, SIZE_Z):
     fin = open(filename, 'r')
     data = json.load(fin)
     boxes = []
@@ -72,9 +77,9 @@ def draw(filename):
 
     pc = plotCubeAt(boxes, colors=colors, edgecolor="k")
     ax.add_collection3d(pc)
-    ax.set_xlim([0, 8])
-    ax.set_ylim([0, 8])
-    ax.set_zlim([0, 8])
+    ax.set_xlim([0, SIZE_X])
+    ax.set_ylim([0, SIZE_Y])
+    ax.set_zlim([0, SIZE_Z])
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
