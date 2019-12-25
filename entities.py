@@ -105,18 +105,21 @@ class AbstractBox:
         if self.position:
             self.position = (Rx.dot(self.position)).tolist()
         self.diag = (Rx.dot(self.diag)).tolist()
+        self.diag = [ abs(i) for i in self.diag ]
 
     def rotateY(self):
         self.size[0], self.size[2] = self.size[2], self.size[0]
         if self.position:
             self.position = (Ry.dot(self.position)).tolist()
         self.diag = (Ry.dot(self.diag)).tolist()
+        self.diag = [abs(i) for i in self.diag]
 
     def rotateZ(self):
         self.size[0], self.size[1] = self.size[1], self.size[0]
         if self.position:
             self.position = (Rz.dot(self.position)).tolist()
         self.diag = (Rz.dot(self.diag)).tolist()
+        self.diag = [abs(i) for i in self.diag]
 
     # вращения в обратную сторону
     def rotateXi(self):
@@ -140,8 +143,9 @@ class AbstractBox:
     def putOnPos(self, position):
         self.position = position
 
-    #перебор вращений, работает плохо
+
     def tryRotations(self, var):
+    # перебор вращений, работает плохо
         a = lambda: None
         rotations = {
             '0': a,

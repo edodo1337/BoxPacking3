@@ -25,16 +25,18 @@ def obj3D_functional(box):
 def find_place(container, box, box_dict):
     #######
     i = j = k = 0
-    while i <= container.size[2]:
-        while j < container.size[1]:
-            while k < container.size[0]:
+    while i <= container.size[2]: #Z
+        j = 0
+        while j <= container.size[1]: #Y
+            k = 0
+            while k <= container.size[0]: #X
                 if container.space[k][j][i] == None:
                     if is_fit(box, container, [k, j, i]) and is_balanced(box, container, [k, j, i]):
                         return [k, j, i]
                     else:
                         var = 0
                         while not is_fit(box, container, [k, j, i]) or not is_balanced(box, container, [k, j, i]):
-                            if var > 64:
+                            if var > 27: #3^3
                                 k+=1
                                 box.load_identity()
                                 break
@@ -42,9 +44,10 @@ def find_place(container, box, box_dict):
                             var += 1
                 else:
                     occupied_size = box_dict[container.space[k][j][i]].diag
-                    i += occupied_size[2]
-                    j += occupied_size[1]
+                    #i += occupied_size[2]
+                    #j += occupied_size[1]
                     k += occupied_size[0]
+                    #k+=1
             j+=1
         i+=1
 
@@ -128,6 +131,9 @@ def is_fit(box, container, position):
     # else:
     #     stepX = -1 #int((box.diag[0]- position[0]) / abs((box.diag[0] - position[0])))
 
+
+    # уже не надо, но пусть останется, чтобы можно было итерировать "назад" (в обратном порядке)
+    # когда отриц. значения вектора диагонали
     stepX = int(box.diag[0] / abs(box.diag[0]))
     stepY = int(box.diag[1] / abs(box.diag[1]))
     stepZ = int(box.diag[2] / abs(box.diag[2]))
@@ -151,10 +157,9 @@ def is_fit(box, container, position):
 
                 try:
                     if container.space[k][j][i] != None:
-
                         return False
                 except Exception as e:
-                    print("INDEX ERROR", [k,j,i], str(e))
+                    print("INDEX ERROR", [k, j, i], str(e))
                     return False
 
     return True

@@ -32,8 +32,8 @@ cont = Container([CONT_X, CONT_Y, CONT_Z])
 
 boxes = []
 
-max_size = 5
-for i in range(9):
+max_size = 2
+for i in range(35):
     boxes.append(Box([random.randint(1, max_size) for i in range(3)], 5, [True], [True] * 3))
     #boxes.append(Box([2,2,3], 5, [True], [True] * 3))
 
@@ -52,6 +52,10 @@ for box in boxes:
     if pos is not None:
         cont.put(box, pos)
 
+# box = Box([3,1,2], 5, [True], [True] * 3)
+# box.rotateZ()
+# cont.put(box, [0,0,0])
+# boxes.append(box)
 
 write_positions("output.json", boxes)
 
