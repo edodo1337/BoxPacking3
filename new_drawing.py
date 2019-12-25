@@ -57,10 +57,10 @@ def plotCubeAt(boxes, colors, **kwargs):
                             facecolors=np.repeat(colors, 6, axis=0), **kwargs)
 
 
-def draw(filename, SIZE_X, SIZE_Y, SIZE_Z):
+def draw(filename, SIZE_X, SIZE_Y, SIZE_Z, boxes):
     fin = open(filename, 'r')
     data = json.load(fin)
-    boxes = []
+    box_data = []
 
     for i in data:
         pos = tuple(i['position'])
@@ -68,14 +68,20 @@ def draw(filename, SIZE_X, SIZE_Y, SIZE_Z):
         y_pos = [y0 + y for y0, y in zip(pos, (0, i['diag'][1], 0))]
         z_pos = [z0 + z for z0, z in zip(pos, (0, 0, i['diag'][2]))]
 
-        boxes.append([pos, x_pos, y_pos, z_pos])
+        box_data.append([pos, x_pos, y_pos, z_pos])
 
-    colors = [np.random.rand(3, ) for i in range(len(boxes))]
+    #colors = [np.random.rand(3, ) for i in range(len(box_data))]
+    colors = []
+    for box in boxes:
+        if box.fragile:
+            colors.append((0.5, 0.5, 0.5, 0.5))
+        else:
+            colors.append(np.random.rand(3, ))
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    pc = plotCubeAt(boxes, colors=colors, edgecolor="k")
+    pc = plotCubeAt(box_data, colors=colors, edgecolor="k")
     ax.add_collection3d(pc)
     ax.set_xlim([0, SIZE_X])
     ax.set_ylim([0, SIZE_Y])

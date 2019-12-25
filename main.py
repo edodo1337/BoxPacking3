@@ -1,41 +1,43 @@
 from entities import *
 from utils import *
 import json
-import random
-import numpy as np
-from drawing import draw
-from settings import global_box_counter
 import new_drawing
-import random
 
-boxdb = BoxDatabase()
 
+#boxdb = BoxDatabase()
+
+cont = Container([CONT_X, CONT_Y, CONT_Z])
+boxes = []
 
 
 
 def read_data(filename):
+#       чтение данных из файла
     f = open(filename, "r").read()
     f_json = json.loads(f)
-
     for item in f_json:
-        size = item['size']
-        mass = item['mass']
-        fragile = item['fragile']
-        is_rotatableXYZ = item['is_rotatableXYZ']
+        print(item)
+        if item['type'] == 'box':
+            size = item['size']
+            mass = item['mass']
+            fragile = item['fragile']
+            is_rotatableXYZ = item['is_rotatableXYZ']
+            count = item['count']
+            #boxes.extend([Box(size=size, mass=mass, fragile=fragile, is_rotatebleXYZ=is_rotatableXYZ)]*count)
+            for i in range(count):
+                boxes.append(Box(size=size, mass=mass, fragile=fragile, is_rotatebleXYZ=is_rotatableXYZ))
 
-        boxdb.put(Box(size, mass, fragile, is_rotatableXYZ))
+        if item['type'] == 'container':
+            size = item['size']
+            cont = Container(size)
 
 
 
-cont = Container([CONT_X, CONT_Y, CONT_Z])
+read_data('input.json')
 
-
-boxes = []
-
-max_size = 2
-for i in range(35):
-    boxes.append(Box([random.randint(1, max_size) for i in range(3)], 5, [True], [True] * 3))
-    #boxes.append(Box([2,2,3], 5, [True], [True] * 3))
+# max_size = 6
+# for i in range(5):
+#     boxes.append(Box([random.randint(max_size // 4, max_size) for i in range(3)], 5, [False], [True] * 3))
 
 
 #сортировка по размеру
@@ -47,17 +49,13 @@ boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
 box_dict = { box.id:box for box in boxes }
 
-for box in boxes:
+for ind, box in enumerate(boxes):
+    print('Processing {} of {}'.format(ind, len(boxes)))
     pos = find_place(cont, box, box_dict)
     if pos is not None:
         cont.put(box, pos)
 
-# box = Box([3,1,2], 5, [True], [True] * 3)
-# box.rotateZ()
-# cont.put(box, [0,0,0])
-# boxes.append(box)
 
 write_positions("output.json", boxes)
 
-# new_drawing.draw("PackerOUT/public/static/output.json")
-new_drawing.draw("output.json", CONT_X, CONT_Y, CONT_Z)
+new_drawing.draw("output.json", CONT_X, CONT_Y, CONT_Z, boxes)

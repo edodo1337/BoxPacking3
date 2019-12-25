@@ -1,8 +1,7 @@
 import json
-from entities import *
 import numpy as np
 
-#не используется
+#       не используется
 def obj2D_functional(box):
     k1 = 1
     k2 = 2
@@ -13,7 +12,7 @@ def obj2D_functional(box):
 
     return k1 * S + k2 * P
 
-#не используется
+#       не используется
 def obj3D_functional(box):
     k1 = 1
     k2 = 2
@@ -31,11 +30,11 @@ def find_place(container, box, box_dict):
             k = 0
             while k <= container.size[0]: #X
                 if container.space[k][j][i] == None:
-                    if is_fit(box, container, [k, j, i]) and is_balanced(box, container, [k, j, i]):
+                    if is_fit(box, container, [k, j, i], box_dict) and is_balanced(box, container, [k, j, i]):
                         return [k, j, i]
                     else:
                         var = 0
-                        while not is_fit(box, container, [k, j, i]) or not is_balanced(box, container, [k, j, i]):
+                        while not is_fit(box, container, [k, j, i], box_dict) or not is_balanced(box, container, [k, j, i]):
                             if var > 27: #3^3
                                 k+=1
                                 box.load_identity()
@@ -89,7 +88,7 @@ def find_place(container, box, box_dict):
     # return None
 
 
-def is_fit(box, container, position):
+def is_fit(box, container, position, box_dict):
     # if (container.size[2] - box.diag[2] - position[2] - 1) < 0:
     #     return False
     # elif (container.size[1] - box.diag[1] - position[1] - 1) < 0:
@@ -104,14 +103,11 @@ def is_fit(box, container, position):
     # elif (container.size[0] - box.diag[0] - position[0] - 1) > container.size[0]:
     #     return False
 
-    if (position[2] + box.diag[2]  > container.size[2]) or (position[1] + box.diag[1] > container.size[1]) or (position[0] + box.diag[0]  > container.size[0]):
-        #print('ERROR 1', box.id, box.diag)
-        if (position == [4, 0, 0]) and (box.diag == [-1, 2, 1]):
-            print('ERROR 1', box.id, box.diag)
+    if (position[2] + box.diag[2]  > container.size[2]) or (position[1] + box.diag[1] > container.size[1]) \
+            or (position[0] + box.diag[0]  > container.size[0]):
         return False
 
     if (position[2] + box.diag[2] < 0) or (position[1] + box.diag[1] < 0) or (position[0] + box.diag[0] < 0):
-        #print('ERROR 2', box.id)
         return False
 
 
@@ -132,8 +128,8 @@ def is_fit(box, container, position):
     #     stepX = -1 #int((box.diag[0]- position[0]) / abs((box.diag[0] - position[0])))
 
 
-    # уже не надо, но пусть останется, чтобы можно было итерировать "назад" (в обратном порядке)
-    # когда отриц. значения вектора диагонали
+    #       уже не надо, но пусть останется, чтобы можно было итерировать "назад" (в обратном порядке)
+    #       когда отриц. значения вектора диагонали
     stepX = int(box.diag[0] / abs(box.diag[0]))
     stepY = int(box.diag[1] / abs(box.diag[1]))
     stepZ = int(box.diag[2] / abs(box.diag[2]))
@@ -154,6 +150,10 @@ def is_fit(box, container, position):
             for k in range(position[0], position[0] + int(box.diag[0] / abs(box.diag[0])) * (1 + abs(box.diag[0])), stepX):  # X
                 if k >= container.size[0] + 1:
                     continue
+
+                if i>0 and container.space[k][j][i]!=None:
+                    if box_dict[container.space[k][j][i]].fragile:
+                        return False
 
                 try:
                     if container.space[k][j][i] != None:
@@ -176,8 +176,9 @@ def is_fit(box, container, position):
 
 
 def is_balanced(box, cont, position):
-    #метод пока не работает, поэтому всегда тру
-    return True
+#       сбалансированность корокбки, пока считает просто: чтоб под центром тяжести что-то было
+
+    # return True
 
     if position[2] == 0:
         return True
@@ -194,16 +195,22 @@ def is_balanced(box, cont, position):
 
 
 def is_intersect(box1, box2, position):
-    plane1_XY = [(0, 0), (box1.diag[0], box1.diag[1])]
-    plane1_XZ = [(0, 0), (box1.diag[0], box1.diag[2])]
-    plane1_YZ = [(0, 0), (box1.diag[1], box1.diag[2])]
+    pass
 
-    plane1_XY = [(box1.position[0] - position[0], box1.position[1] - position[1]), (box1.diag[0], box1.diag[1])]
-    plane1_XZ = [(box1.position[0] - position[0], box1.position[1] - position[1]), (box1.diag[0], box1.diag[2])]
-    plane1_YZ = [(box1.position[0] - position[0], box1.position[1] - position[1]), (box1.diag[1], box1.diag[2])]
+
+
+#        не используется
+#     plane1_XY = [(0, 0), (box1.diag[0], box1.diag[1])]
+#     plane1_XZ = [(0, 0), (box1.diag[0], box1.diag[2])]
+#     plane1_YZ = [(0, 0), (box1.diag[1], box1.diag[2])]
+#
+#     plane1_XY = [(box1.position[0] - position[0], box1.position[1] - position[1]), (box1.diag[0], box1.diag[1])]
+#     plane1_XZ = [(box1.position[0] - position[0], box1.position[1] - position[1]), (box1.diag[0], box1.diag[2])]
+#     plane1_YZ = [(box1.position[0] - position[0], box1.position[1] - position[1]), (box1.diag[1], box1.diag[2])]
 
 
 def squares_intersect(plane1, plane2):
+#       не используется
     # 1 - 2
     # |   |
     # 0 - 3
@@ -235,7 +242,7 @@ def makeStack(boxes):
     pass
 
 
-#матрицы поворота
+#       матрицы поворота
 
 Rx = np.array(
     [

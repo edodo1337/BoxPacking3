@@ -1,73 +1,44 @@
 [
   {
     "type": "box",
+    "mass": 5,
+    "fragile": false,
+    "size": [2,1,1],
+    "count": 8,
+    "is_rotatableXYZ": [true, true, true]
+  },
+
+  {
+    "type": "box",
+    "mass": 5,
+    "fragile": false,
+    "size": [2,3,1],
+    "count": 8,
+    "is_rotatableXYZ": [true, true, true]
+  },
+
+  {
+    "type": "box",
+    "mass": 5,
+    "fragile": false,
+    "size": [2,1,4],
+    "count": 8,
+    "is_rotatableXYZ": [true, true, true]
+  },
+
+  {
+    "type": "box",
+    "mass": 5,
     "fragile": true,
-    "size": [1,2,2],
-    "color": null,
-    "position": null
+    "size": [2,2,2],
+    "count": 4,
+    "is_rotatableXYZ": [true, true, true]
   },
 
-  {
-    "type": "box",
-    "fragile": true,
-    "size": [1,1,1],
-    "color": null,
-    "position": null
-  },
-
-  {
-    "type": "box",
-    "fragile": true,
-    "size": [3,2,3],
-    "color": null,
-    "position": null
-  },
-
-  {
-    "type": "box",
-    "fragile": false,
-    "size": [2,3,3],
-    "color": null,
-    "position": null
-  },
-
-  {
-    "type": "box",
-    "fragile": false,
-    "size": [2,3,3],
-    "color": null,
-    "position": null
-  },
-
-  {
-    "type": "box",
-    "fragile": false,
-    "size": [2,1,3],
-    "color": null,
-    "position": null
-  },
-
-  {
-    "type": "box",
-    "fragile": false,
-    "size": [2,2,1],
-    "color": null,
-    "position": null
-  },
-
-  {
-    "type": "box",
-    "fragile": false,
-    "size": [3,4,1],
-    "color": null,
-    "position": null
-  },
 
   {
     "type": "container",
-    "size": [5,5,7]
+    "size": [8,8,15]
   }
-
-
 
 ]
