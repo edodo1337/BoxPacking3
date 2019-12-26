@@ -48,22 +48,35 @@ boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
 box_dict = { box.id:box for box in boxes }
 
-for ind, box in enumerate(boxes):
-    print('Processing {} of {}'.format(ind, len(boxes)))
+# for ind, box in enumerate(boxes):
+#     print('Processing {} of {}'.format(ind+1, len(boxes)))
+#     pos = find_place(cont, box, box_dict)
+#     if pos is not None:
+#         cont.put(box, pos)
+
+length = len(boxes)
+ind = 0
+packed = [0]*len(boxes)
+_boxes = []
+
+print('Packed {} of {}'.format(ind, length))
+while boxes:
+    box = boxes.pop(0)
     pos = find_place(cont, box, box_dict)
     if pos is not None:
+        ind += 1
+        _boxes.append(box)
         cont.put(box, pos)
-#
-# boxes = [Box([2,2,1], 5, [False], [True] * 3)] * 4
-# box_dict = { box.id:box for box in boxes }
-# size = boxes[0].size
-# print(size)
-# block = Block([size[2], size[1], size[0]], [True]*3)
-# for box in boxes:
-#     pos = find_place(block, box, box_dict)
-#
-# cont.put(block)
+    else:
+        packed[box.id] += 1
+        if packed[box.id] > 2:
+            break
+        else:
+            boxes.append(box)
+    print('Packed {} of {}'.format(ind, length))
 
-write_positions("output.json", boxes)
 
-new_drawing.draw("output.json", CONT_X, CONT_Y, CONT_Z, boxes)
+
+write_positions("output.json", _boxes)
+
+new_drawing.draw("output.json", CONT_X, CONT_Y, CONT_Z, _boxes)

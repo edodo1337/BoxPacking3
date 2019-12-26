@@ -36,8 +36,8 @@ def find_place(container, box, box_dict):
                         return [k, j, i]
                     else:
                         var = 0
-                        while not is_fit(box, container, [k, j, i], box_dict) or not is_balanced(box, container,
-                                                                                                 [k, j, i]):
+                        while not is_fit(box, container, [k, j, i], box_dict) \
+                                or not is_balanced(box, container, [k, j, i]):
                             if var > 27:  # 3^3
                                 k += 1
                                 box.load_identity()
@@ -53,7 +53,7 @@ def find_place(container, box, box_dict):
             j += 1
         i += 1
 
-    print('No place', box.size)
+    print('---No place', box.size)
     return None
 
 def is_fit(box, container, position, box_dict):
@@ -98,24 +98,38 @@ def is_fit(box, container, position, box_dict):
 
 
 def is_balanced(box, cont, position):
-    #       сбалансированность корокбки, пока считает просто: чтоб под центром тяжести что-то было (этого недостаточно)
+    #       сбалансированность корокбки. считает, что коробка сбалансирована, если под 4 углами что-то есть
     if position[2] == 0:
         return True
 
     centerX, centerY = (box.diag[0] // 2 + position[0]), (box.diag[1] // 2 + position[1])
 
     if (centerY > cont.size[1] - 1) or (centerY < 0):
+        print('--out of cont')
         return False
 
     if (centerX > cont.size[0] - 1) or (centerX < 0):
+        print('--out of cont')
         return False
 
-    # x, y, z = position
-    # if (cont.space[x][y][position[2] - 1] == None or cont.space[x + box.size[0]][y][position[2] - 1] == None
-    #         or cont.space[x + box.size[0]][y + box.size[1]][position[2] - 1] == None or cont.space[x][y + box.size[1]][position[2] - 1] == None):
-    #     return False
+    x, y, z = position
+    if (cont.space[x][y][z - 1] == None or cont.space[x + box.size[0] - 1][y][z - 1] == None
+            or cont.space[x + box.size[0] - 1][y + box.size[1] - 1][z - 1] == None or cont.space[x][y + box.size[1] - 1][z - 1] == None):
+        return False
+    else:
+        return  True
 
-    return False if (cont.space[centerX][centerY][position[2] - 1] == None) else True
+    #       то же самое, но с тремя углами
+    # r_d = cont.space[x][y][z - 1] == None
+    # r_u = cont.space[x + box.size[0] - 1][y][z - 1] == None
+    # l_u = cont.space[x + box.size[0] - 1][y + box.size[1] - 1][z - 1] == None
+    # l_d = cont.space[x][y + box.size[1] - 1][z - 1] == None
+    #
+    # if sum([r_d, r_u, l_u, l_d])<3:
+    #     return False
+    # else True
+
+    ##return False if (cont.space[centerX][centerY][position[2] - 1] == None) else True
 
 
 def is_intersect(box1, box2, position):
