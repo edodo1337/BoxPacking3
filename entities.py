@@ -7,11 +7,10 @@ import math
 #   размеры контейнера
 CONT_X = 12
 CONT_Y = 12
-CONT_Z = 25
+CONT_Z = 12
 
 
 class BoxDatabase():  # больше не используется
-
     def __init__(self):
         self.items = dict()
 
@@ -99,17 +98,16 @@ class AbstractBox:  # абстрактный класс коробки
     ###     методы вращения коробки по осям
 
     def load_identity(self):  # начальная ориентация коробки (не используется)
-
         self.size = self.default_size[:]
         self.diag = [self.size[0], self.size[1], self.size[2]]
 
     def rotateX(self):
-        if self.is_rotatableX:
+        if self.is_rotatableX:  # если нет запрета на вращение по оси
             self.size[1], self.size[2] = self.size[2], self.size[1]
             if self.position:
                 self.position = (Rx.dot(self.position)).tolist()
             self.diag = (Rx.dot(self.diag)).tolist()
-            self.diag = [abs(i) for i in self.diag]
+            self.diag = [abs(i) for i in self.diag]  # значение по модулу, т.к. работаем в положительных осях
 
     def rotateY(self):
         if self.is_rotatableY:
@@ -127,24 +125,27 @@ class AbstractBox:  # абстрактный класс коробки
             self.diag = (Rz.dot(self.diag)).tolist()
             self.diag = [abs(i) for i in self.diag]
 
-    #       вращения в обратную сторону (не используется)
+    #       вращения в обратную сторону (используется в данный момент, т.к. они работают лучше, не знаю почему)
     def rotateXi(self):
         self.size[1], self.size[2] = self.size[2], self.size[1]
         if self.position:
             self.position = (Qx.dot(self.position)).tolist()
         self.diag = (Qx.dot(self.diag)).tolist()
+        self.diag = [abs(i) for i in self.diag]
 
     def rotateYi(self):
         self.size[0], self.size[2] = self.size[2], self.size[0]
         if self.position:
             self.position = (Qy.dot(self.position)).tolist()
         self.diag = (Qy.dot(self.diag)).tolist()
+        self.diag = [abs(i) for i in self.diag]
 
     def rotateZi(self):
         self.size[0], self.size[1] = self.size[1], self.size[0]
         if self.position:
             self.position = (Qz.dot(self.position)).tolist()
         self.diag = (Qz.dot(self.diag)).tolist()
+        self.diag = [abs(i) for i in self.diag]
 
     def putOnPos(self, position):
         self.position = position
@@ -159,12 +160,12 @@ class AbstractBox:  # абстрактный класс коробки
         a = lambda: None
         rotations = {
             '0': a, # пустой метод, который ничего не делает
-            '1': self.rotateX,
-            '2': self.rotateY,
-            '3': self.rotateZ,
-            # '4': self.rotateXi,
-            # '5': self.rotateYi,
-            # '6': self.rotateZi,
+            '1': self.rotateXi,
+            '2': self.rotateYi,
+            '3': self.rotateZi,
+            # '4': self.rotateX,
+            # '5': self.rotateY,
+            # '6': self.rotateZ,
         }
         done = False
         counter = 0

@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import math
 
 
 def obj2D_functional(box):  # !!!не используется
@@ -136,9 +137,9 @@ def is_balanced(box, cont, position):
     #       проверяет наличие чего-нибудь под 4-мя углами коробки
     x, y, z = position
     try:
-        if (cont.space[x][y][z - 1] == None or cont.space[x + box.size[0] - 1][y][z - 1] == None
-                or cont.space[x + box.size[0] - 1][y + box.size[1] - 1][z - 1] == None or
-                cont.space[x][y + box.size[1] - 1][z - 1] == None):
+        if (cont.space[x][y][z - 1] == None or cont.space[x + box.diag[0] - 1][y][z - 1] == None
+                or cont.space[x + box.diag[0] - 1][y + box.diag[1] - 1][z - 1] == None or
+                cont.space[x][y + box.diag[1] - 1][z - 1] == None):
             return False
         else:
             return True
@@ -225,7 +226,7 @@ Ry = np.array(
 
 Rz = np.array(
     [
-        [0, -1, 0],
+        [1, -1, 0],
         [1, 0, 0],
         [0, 0, 1]
     ]

@@ -43,7 +43,7 @@ def read_data(filename):
 # # #
 
 #   рандомный набор коробок
-box_count = 55
+box_count = 50
 max_size = 5
 min_size = max_size // 4 if max_size // 4 != 0 else 1
 for i in range(box_count):
@@ -94,6 +94,7 @@ while boxes:  # цикл по коробкам, пытаемся помести�
         else:
             boxes.append(box)
     print('Packed {} of {}'.format(ind, length))
+
 
 write_positions("output.json", _boxes)
 
