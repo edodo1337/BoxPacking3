@@ -4,15 +4,13 @@ from utils import Rx, Ry, Rz, Qx, Qy, Qz, Ident
 from settings import global_box_counter
 import math
 
-# размеры контейнера
+#   размеры контейнера
 CONT_X = 12
 CONT_Y = 12
-CONT_Z = 12
+CONT_Z = 25
 
 
-
-class BoxDatabase():
-# больше не используется
+class BoxDatabase():  # больше не используется
 
     def __init__(self):
         self.items = dict()
@@ -31,14 +29,16 @@ class BoxDatabase():
 
 
 class AbstractContainer:
-    # класс контейнера, свободное пространство задается 3-матрицей, если ячейка == None, то она свободна
-    # иначе равна id коробки
+    #   абстрактный класс контейнера, свободное пространство задается 3-матрицей, если ячейка == None, то она свободна
+    #   иначе равна id коробки
 
     def __init__(self, size):
         self.size = size
-        self.space = [[[None for k in range(self.size[2] + 1)] for j in range(self.size[1] + 1)] for i in range(self.size[0] + 1)]
+        self.space = [[[None for k in range(self.size[2] + 1)] for j in range(self.size[1] + 1)] for i in
+                      range(self.size[0] + 1)]
         self.items = {}
 
+    #   метод, который помещает коробку в спейс контейнера
     def put(self, box, position):
         stepZ = -1 if (position[2] + box.diag[2]) == 0 else int(
             (position[2] + box.diag[2]) / abs(position[2] + box.diag[2]))
@@ -54,7 +54,7 @@ class AbstractContainer:
         box.putOnPos(position)
         self.items[str(box.id)] = box
 
-
+    #   метод, который удаляет коробку из спейса контейнера (не используется)
     def pop(self, box):
         for i in range(box.position[2], box.position[2] + box.size[2]):  # Z
             for j in range(box.position[1], box.position[1] + box.size[1]):  # Y
@@ -63,6 +63,7 @@ class AbstractContainer:
 
         del self.items[str(box.id)]
 
+    #   метод для вывода спейса контейнера в консоль (послойно)
     def space_print(self):
         for i in range(self.size[2]):  # Z
             for j in range(self.size[1]):  # Y
@@ -75,9 +76,8 @@ class AbstractContainer:
             print()
 
 
-class AbstractBox:
+class AbstractBox:  # абстрактный класс коробки
     def __init__(self, size, is_rotatableXYZ):
-        self.container = None
         self.size = size
         global global_box_counter
         global_box_counter += 1
@@ -96,7 +96,10 @@ class AbstractBox:
         global global_box_counter
         return global_box_counter
 
-    def load_identity(self):
+    ###     методы вращения коробки по осям
+
+    def load_identity(self):  # начальная ориентация коробки (не используется)
+
         self.size = self.default_size[:]
         self.diag = [self.size[0], self.size[1], self.size[2]]
 
@@ -106,7 +109,7 @@ class AbstractBox:
             if self.position:
                 self.position = (Rx.dot(self.position)).tolist()
             self.diag = (Rx.dot(self.diag)).tolist()
-            self.diag = [ abs(i) for i in self.diag ]
+            self.diag = [abs(i) for i in self.diag]
 
     def rotateY(self):
         if self.is_rotatableY:
@@ -123,7 +126,6 @@ class AbstractBox:
                 self.position = (Rz.dot(self.position)).tolist()
             self.diag = (Rz.dot(self.diag)).tolist()
             self.diag = [abs(i) for i in self.diag]
-
 
     #       вращения в обратную сторону (не используется)
     def rotateXi(self):
@@ -147,12 +149,16 @@ class AbstractBox:
     def putOnPos(self, position):
         self.position = position
 
-
     def tryRotations(self, var):
-    # перебор вращений, работает плохо
+        #   перебор вращений, работает кое как
+        #   перебирает все (вроде бы) комбинации вращений коробки
+        #   как набор вращений по 3 осям
+        #   комбинация вращений кодируется 3мя числами. Напр. [0 2 3] - вращение по Y, затем по Z
+        #   метод получает на вход десятичное число (фактически порядковый номер комбинации)
+
         a = lambda: None
         rotations = {
-            '0': a,
+            '0': a, # пустой метод, который ничего не делает
             '1': self.rotateX,
             '2': self.rotateY,
             '3': self.rotateZ,
@@ -181,8 +187,7 @@ class AbstractBox:
                         counter += 1
 
 
-class Box(AbstractBox):
-    # класс коробки
+class Box(AbstractBox):  # класс коробки (обычной)
     def __init__(self, size, mass, fragile, is_rotatebleXYZ):
         super().__init__(size, is_rotatebleXYZ)
         self.mass = mass
@@ -204,7 +209,7 @@ class Box(AbstractBox):
 
         return [output_dict]
 
-    # не используется
+    #       не используется
     def Translate(self, position):
         if position is not None:
             pos = np.array(position)
@@ -219,10 +224,10 @@ class Container(AbstractContainer):
     pass
 
 
-
 class Block(AbstractContainer, AbstractBox):
-    # класс блока (набора коробок)
-    # проблема с вращением блока в целом (совместно с коробками, чтобы их относительные позиции сохранялись)
+    #       класс блока (набора коробок)
+    #       пока не используется, много проблем
+    #       проблема с вращением блока в целом (совместно с коробками, чтобы их относительные позиции сохранялись)
 
     def __init__(self, size, is_rotatebleXYZ):
         AbstractBox.__init__(self, size=size, is_rotatableXYZ=is_rotatebleXYZ)
@@ -230,19 +235,21 @@ class Block(AbstractContainer, AbstractBox):
         self.mass = 0
         self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in range(self.size[0])]
 
+
     def put(self, box, position):
         super().put(box, position)
         box.relative_position = position
         self.mass += box.mass
 
     def getattrs(self):
-    # метод для получения выходных данных json
+        #       метод для получения выходных данных json
         output_list = []
         for box in self.items.values():
             output_list.append(box.getattrs()[0])
         return output_list
 
     def putOnPos(self, position):
+        #   поместить блок и коробки внутри в позицию (типа групповая операция)
         self.position = position
         for box in self.items.values():
             box.position = [i + j for i, j in zip(box.relative_position, self.position)]
@@ -288,16 +295,14 @@ class Block(AbstractContainer, AbstractBox):
         AbstractBox.rotateZ(self)
 
         for box in self.items.values():
-
-            #box.putOnPos([b for a, b in zip(box.position, box.relative_position)])
+            # box.putOnPos([b for a, b in zip(box.position, box.relative_position)])
             box.position = box.relative_position[:]
             box.rotateZ()
 
-            #box.putOnPos([a + b for a, b in zip(self.position, box.relative_position)])
-            #box.putOnPos(self.position)
+            # box.putOnPos([a + b for a, b in zip(self.position, box.relative_position)])
+            # box.putOnPos(self.position)
 
         self.putOnPos(temp_pos)
-
 
     def rotateXi(self):
         temp_pos = None

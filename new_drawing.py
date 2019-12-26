@@ -5,7 +5,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import random
 from entities import *
 import json
-from entities import CONT_X, CONT_Y, CONT_Z
+
 
 
 ########
