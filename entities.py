@@ -5,9 +5,9 @@ from settings import global_box_counter
 import math
 
 #   размеры контейнера
-CONT_X = 12
-CONT_Y = 12
-CONT_Z = 12
+CONT_X = 14
+CONT_Y = 14
+CONT_Z = 14
 
 
 class BoxDatabase():  # больше не используется

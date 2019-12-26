@@ -36,18 +36,22 @@ def read_data(filename):
 
 
 
-#       раскоментировать, если нужно прочитаь из файла и закоментировать блок (# # #) ниже
+#       раскоментировать, если нужно прочитать из файла и закоментировать блок (# # #) ниже
 # read_data('input.json')
 
 
 # # #
 
-#   рандомный набор коробок
-box_count = 50
+#   рандомный набор коробок (закоментирвать, если чтение из файла)
+box_count = 100
 max_size = 5
 min_size = max_size // 4 if max_size // 4 != 0 else 1
 for i in range(box_count):
-    boxes.append(Box([random.randint(min_size, max_size) for j in range(3)], 5, False, [False] * 3))
+    #is_fragile = (i % (max_size / 15)) == 0 #  каждая 15-я коробка будет хрупкой
+    #print('ASDASDASDASD', is_fragile)
+    is_rotatebleXYZ = [random.randint(min_size, max_size)%2 == 0 for j in range(3)] # рандомизация
+    print(is_rotatebleXYZ)
+    boxes.append(Box([random.randint(min_size, max_size) for j in range(3)], 5, fragile=False, is_rotatebleXYZ=is_rotatebleXYZ))
 
 # for i in range(box_count//5):
 #     boxes.append(Box([random.randint(max_size // 4, max_size // 2) for i in range(3)], 5, True, [False] * 3))

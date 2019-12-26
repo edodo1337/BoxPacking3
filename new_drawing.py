@@ -81,6 +81,10 @@ def draw(filename, SIZE_X, SIZE_Y, SIZE_Z, boxes):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+    #ax1 = plt.axes([0, 0, 3, 0.5])
+
+    #ax.pbaspect = [SIZE_X//SIZE_Z, SIZE_Y//SIZE_Z, 1.0]
+    #ax.pbaspect = [0.5, 0.5, 1]
 
     pc = plotCubeAt(box_data, colors=colors, edgecolor="k")
     ax.add_collection3d(pc)
