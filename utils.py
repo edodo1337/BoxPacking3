@@ -34,7 +34,10 @@ def find_place(container, box, box_dict, layer_packed):
     cont_x, cont_y, cont_z = container.size
     i = j = k = 0
     while i < cont_z:  # Z
-        # if layer_packed[i] == 0:    # если в слое нет заполненных ячеек, пропускаем
+        bsize_x, bsize_y, bsize_z = box.size
+
+        # если в слое нет заполненных ячеек, пропускаем
+        # if layer_packed[i] <= bsize_x*bsize_y and layer_packed[i] <= bsize_x*bsize_z and layer_packed[i] <= bsize_z*bsize_y:
         #     #print('Full layer', i)
         #     i += 1
         #     continue
@@ -46,8 +49,8 @@ def find_place(container, box, box_dict, layer_packed):
                     flag_balanced = is_balanced(box, container, [k, j, i])
                     flag_fit = is_fit(box, container, [k, j, i], box_dict)
                     if flag_fit and flag_balanced:
-                        for layer in range(i, i + box.size[2]):  # вычитаем свободные ячейки из слоя в который положили
-                            layer_packed[layer] -= box.size[0] * box.size[1]
+                        for layer in range(i, i + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
+                            layer_packed[layer] -= bsize_x * bsize_y - 1
                         return [k, j, i]
                     else:
                         var = 0

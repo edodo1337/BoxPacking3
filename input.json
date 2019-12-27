@@ -62,23 +62,6 @@
     "is_rotatableXYZ": [true, true, true]
   },
 
-  {
-    "type": "box",
-    "mass": 5,
-    "fragile": false,
-    "size": [2,3,2],
-    "count": 28,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 5,
-    "fragile": false,
-    "size": [4,3,2],
-    "count": 27,
-    "is_rotatableXYZ": [true, true, true]
-  },
 
   {
     "type": "container",

@@ -10,9 +10,9 @@ start_time = time.time()
 
 # boxdb = BoxDatabase()
 #   размеры контейнера
-CONT_X = 5
-CONT_Y = 5
-CONT_Z = 5
+CONT_X = 6
+CONT_Y = 6
+CONT_Z = 6
 
 cont = Container([CONT_X, CONT_Y, CONT_Z])
 boxes = []
@@ -48,8 +48,8 @@ if namespace.mode == 'file':
     read_data('input.json')
 
 else:   # Рандомный набор коробок
-    box_count = 25     # количество коробок
-    max_size = 2        # макс размер коробки
+    box_count = 15     # количество коробок
+    max_size = 3        # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1   # минимальный разрмер
     #min_size = 5
     for i in range(box_count):
@@ -71,14 +71,14 @@ boxes.sort(key=lambda x: x.size[0] * x.size[1], reverse=True)
 boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
 box_dict = { box.id:box for box in boxes }  # словарь для доступа к коробке по ее id
-layer_packed = [(cont.size[0] ) * (cont.size[1] )] * cont.size[2]  # массив хранит количество свободных ячеек в каждом слое, чтобы через них потом перескакивать
+layer_packed = [(cont.size[0] ) * (cont.size[1] )] * (cont.size[2] )  # массив хранит количество свободных ячеек в каждом слое, чтобы через них потом перескакивать
 
 
 length = len(boxes)
 ind = 0
 packed = [0]*len(boxes) # состояние коробки по ее id, количество попыток ее упаковать
 _boxes = []
-
+print(layer_packed)
 print('Packed {} of {}'.format(ind, length))
 
 while boxes:  # цикл по коробкам, пытаемся поместить
@@ -97,7 +97,7 @@ while boxes:  # цикл по коробкам, пытаемся помести�
     print('Packed {} of {}'.format(ind, length))
 
 print('Program execution time {}'.format(time.time() - start_time))
-#print(layer_packed)
+print(layer_packed)
 
 write_positions("output.json", _boxes)  # запись в файл
 
