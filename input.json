@@ -3,7 +3,7 @@
     "type": "box",
     "mass": 5,
     "fragile": false,
-    "size": [2,1,1],
+    "size": [2,2,1],
     "count": 25,
     "is_rotatableXYZ": [true, true, true]
   },
@@ -57,7 +57,7 @@
     "type": "box",
     "mass": 5,
     "fragile": false,
-    "size": [1,1,2],
+    "size": [1,4,2],
     "count": 36,
     "is_rotatableXYZ": [true, true, true]
   },

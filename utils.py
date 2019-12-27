@@ -34,10 +34,10 @@ def find_place(container, box, box_dict, layer_packed):
     cont_x, cont_y, cont_z = container.size
     i = j = k = 0
     while i < cont_z:  # Z
-        if layer_packed[i] == 0:    # если в слое нет заполненных ячеек, пропускаем
-            #print('Full layer', i)
-            i += 1
-            continue
+        # if layer_packed[i] == 0:    # если в слое нет заполненных ячеек, пропускаем
+        #     #print('Full layer', i)
+        #     i += 1
+        #     continue
         j = 0
         while j < cont_y:  # Y
             k = 0
