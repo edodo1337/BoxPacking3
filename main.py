@@ -4,8 +4,15 @@ import json
 import new_drawing
 import random
 import sys
+import time
 
-#boxdb = BoxDatabase()
+start_time = time.time()
+
+# boxdb = BoxDatabase()
+#   размеры контейнера
+CONT_X = 5
+CONT_Y = 5
+CONT_Z = 5
 
 cont = Container([CONT_X, CONT_Y, CONT_Z])
 boxes = []
@@ -28,10 +35,8 @@ def read_data(filename):
 
         if item['type'] == 'container':
             size = item['size']
-            cont = Container(size)
-
-
-
+            globals()['cont'] = Container(size)
+            globals()['CONT_X', 'CONT_Y', 'CONT_Z'] = size[0], size[1], size[2]
 # # #
 
 parser = createParser() # для чтения параметров запуска
@@ -42,15 +47,16 @@ namespace = parser.parse_args(sys.argv[1:])
 if namespace.mode == 'file':
     read_data('input.json')
 
-else:
-    box_count = 100  # количество коробок
-    max_size = 5    # макс размер коробки
+else:   # Рандомный набор коробок
+    box_count = 25     # количество коробок
+    max_size = 2        # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1   # минимальный разрмер
+    #min_size = 5
     for i in range(box_count):
         # is_fragile = (i % (max_size / 15)) == 0 #  каждая 15-я коробка будет хрупкой
         # print('asd', is_fragile)
-        is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
-        #print(is_rotatebleXYZ)
+        #is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
+        is_rotatebleXYZ = [True]*3
         boxes.append(
             Box([random.randint(min_size, max_size) for j in range(3)], 5, fragile=False, is_rotatebleXYZ=is_rotatebleXYZ))
 
@@ -65,6 +71,8 @@ boxes.sort(key=lambda x: x.size[0] * x.size[1], reverse=True)
 boxes.sort(key=lambda x: x.fragile == True, reverse=False)
 
 box_dict = { box.id:box for box in boxes }  # словарь для доступа к коробке по ее id
+layer_packed = [(cont.size[0] ) * (cont.size[1] )] * cont.size[2]  # массив хранит количество свободных ячеек в каждом слое, чтобы через них потом перескакивать
+
 
 length = len(boxes)
 ind = 0
@@ -75,7 +83,7 @@ print('Packed {} of {}'.format(ind, length))
 
 while boxes:  # цикл по коробкам, пытаемся поместить
     box = boxes.pop(0)  # вынимается первая коробка в очереди
-    pos = find_place(cont, box, box_dict)
+    pos = find_place(cont, box, box_dict, layer_packed)
     if pos is not None:
         ind += 1
         _boxes.append(box)
@@ -88,7 +96,9 @@ while boxes:  # цикл по коробкам, пытаемся помести�
             boxes.append(box)
     print('Packed {} of {}'.format(ind, length))
 
+print('Program execution time {}'.format(time.time() - start_time))
+#print(layer_packed)
 
-write_positions("output.json", _boxes)
+write_positions("output.json", _boxes)  # запись в файл
 
-new_drawing.draw("output.json", CONT_X, CONT_Y, CONT_Z, _boxes)
+new_drawing.draw("output.json", cont.size[0], cont.size[1], cont.size[2], _boxes)

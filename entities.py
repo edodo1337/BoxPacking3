@@ -4,12 +4,6 @@ from utils import Rx, Ry, Rz, Qx, Qy, Qz, Ident
 from settings import global_box_counter
 import math
 
-#   размеры контейнера
-CONT_X = 14
-CONT_Y = 14
-CONT_Z = 14
-
-
 class BoxDatabase():  # больше не используется
     def __init__(self):
         self.items = dict()
@@ -33,8 +27,8 @@ class AbstractContainer:
 
     def __init__(self, size):
         self.size = size
-        self.space = [[[None for k in range(self.size[2] + 1)] for j in range(self.size[1] + 1)] for i in
-                      range(self.size[0] + 1)]
+        self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in
+                      range(self.size[0])]
         self.items = {}
 
     #   метод, который помещает коробку в спейс контейнера

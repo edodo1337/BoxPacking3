@@ -4,6 +4,7 @@ import math
 import argparse
 
 
+
 def obj2D_functional(box):  # !!!не используется
     k1 = 1
     k2 = 2
@@ -20,30 +21,38 @@ def obj3D_functional(box):  # !!!не используется
     return k1 * box.size[2] + k2 * box.size[0] * box.size[1] * box.size[2]
 
 
-def find_place(container, box, box_dict):
+def find_place(container, box, box_dict, layer_packed):
     #   метод для поиска позиции (первой удачной), в которую можно поместить
     #   коробку. Возвращает позицию [x,y,z], если не найдена - None
 
     #   цикл по спейсу контейнера, проверяем, если ячейка не занята (None)
     #   и коробка устойчива и помещается, если нет то пытаемся ее
     #   вращать и поместить опять (в ту же точку)
+
     flag_fit = False
     flag_balanced = False
+    cont_x, cont_y, cont_z = container.size
     i = j = k = 0
-    while i <= container.size[2]:  # Z
+    while i < cont_z:  # Z
+        if layer_packed[i] == 0:    # если в слое нет заполненных ячеек, пропускаем
+            #print('Full layer', i)
+            i += 1
+            continue
         j = 0
-        while j <= container.size[1]:  # Y
+        while j < cont_y:  # Y
             k = 0
-            while k <= container.size[0]:  # X
+            while k < cont_x:  # X
                 if container.space[k][j][i] == None:
                     flag_balanced = is_balanced(box, container, [k, j, i])
                     flag_fit = is_fit(box, container, [k, j, i], box_dict)
                     if flag_fit and flag_balanced:
+                        for layer in range(i, i + box.size[2]):  # вычитаем свободные ячейки из слоя в который положили
+                            layer_packed[layer] -= box.size[0] * box.size[1]
                         return [k, j, i]
                     else:
                         var = 0
                         while not flag_fit or not flag_balanced:
-                            if var > 30:  # 3^3
+                            if var > 27:  # 3^3
                                 k += 1
                                 box.load_identity()
                                 break
@@ -59,6 +68,7 @@ def find_place(container, box, box_dict):
                     k += occupied_size[0]  # по X
             j += 1
         i += 1
+
 
     print('---No place size: {} balanced: {}, fit: {}'.format(box.diag, flag_balanced, flag_fit))
     return None
@@ -198,7 +208,7 @@ def write_positions(filename, boxes):  # метод для записи выхо
             output_list.append(box_dict)
 
     output = json.dumps(output_list)
-    print(output)
+    #print(output)
     fout.write(output)
 
 
@@ -213,12 +223,6 @@ def createParser(): # парсер параметров запуска
 
 
 #       матрицы поворота
-
-
-
-
-
-
 Rx = np.array(
     [
         [1, 0, 0],
