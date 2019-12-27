@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import math
+import argparse
 
 
 def obj2D_functional(box):  # !!!не используется
@@ -201,12 +202,22 @@ def write_positions(filename, boxes):  # метод для записи выхо
     fout.write(output)
 
 
-def makeStack(boxes):  # !!!не используется
+def createParser(): # парсер параметров запуска
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m', '--mode', default='random')
+    parser.add_argument('-c', '--count')
+    parser.add_argument('-maxs', '--max_size')
+    parser.add_argument('-mins', '--min_size')
 
-    pass
+    return parser
 
 
 #       матрицы поворота
+
+
+
+
+
 
 Rx = np.array(
     [
