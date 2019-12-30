@@ -35,7 +35,7 @@ def find_place(container, box, box_dict, layer_packed):
     i = j = k = 0
     while i < cont_z:  # Z
         bsize_x, bsize_y, bsize_z = box.size
-        # если в слое нет достаточно свободного места, пропускаем
+        # если в слое недостаточно свободного места, пропускаем
         if layer_packed[i] < bsize_x*bsize_y and layer_packed[i] < bsize_x*bsize_z and layer_packed[i] < bsize_z*bsize_y:
             #print('Full layer', i)
             i += 1
