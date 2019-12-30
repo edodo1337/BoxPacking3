@@ -38,6 +38,15 @@
   {
     "type": "box",
     "mass": 5,
+    "fragile": true,
+    "size": [3,3,2],
+    "count": 12,
+    "is_rotatableXYZ": [true, true, true]
+  },
+
+  {
+    "type": "box",
+    "mass": 5,
     "fragile": false,
     "size": [5,2,3],
     "count": 30,
