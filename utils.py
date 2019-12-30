@@ -35,12 +35,11 @@ def find_place(container, box, box_dict, layer_packed):
     i = j = k = 0
     while i < cont_z:  # Z
         bsize_x, bsize_y, bsize_z = box.size
-
-        # если в слое нет заполненных ячеек, пропускаем
-        # if layer_packed[i] <= bsize_x*bsize_y and layer_packed[i] <= bsize_x*bsize_z and layer_packed[i] <= bsize_z*bsize_y:
-        #     #print('Full layer', i)
-        #     i += 1
-        #     continue
+        # если в слое нет достаточно свободного места, пропускаем
+        if layer_packed[i] < bsize_x*bsize_y and layer_packed[i] < bsize_x*bsize_z and layer_packed[i] < bsize_z*bsize_y:
+            #print('Full layer', i)
+            i += 1
+            continue
         j = 0
         while j < cont_y:  # Y
             k = 0
@@ -49,8 +48,9 @@ def find_place(container, box, box_dict, layer_packed):
                     flag_balanced = is_balanced(box, container, [k, j, i])
                     flag_fit = is_fit(box, container, [k, j, i], box_dict)
                     if flag_fit and flag_balanced:
+                        bsize_x, bsize_y, bsize_z = box.size
                         for layer in range(i, i + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
-                            layer_packed[layer] -= bsize_x * bsize_y - 1
+                            layer_packed[layer] -= bsize_x * bsize_y
                         return [k, j, i]
                     else:
                         var = 0
@@ -62,6 +62,11 @@ def find_place(container, box, box_dict, layer_packed):
                             box.tryRotations(var)
                             flag_balanced = is_balanced(box, container, [k, j, i])
                             flag_fit = is_fit(box, container, [k, j, i], box_dict)
+                            if flag_fit and flag_balanced:
+                                bsize_x, bsize_y, bsize_z = box.size
+                                for layer in range(i, i + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
+                                    layer_packed[layer] -= bsize_x * bsize_y
+                                return [k, j, i]
                             var += 1
                 else:
                     #   получаем коробку, которая занимает текущую ячейку и скипаем на величину ее размера по оси Х
@@ -96,7 +101,6 @@ def is_fit(box, container, position, box_dict):
     #       уже не надо, но пусть останется, чтобы можно было итерировать "назад" (в обратном порядке)
     #       когда отриц. значения вектора диагонали ( типа range(N, M, -1) )
     #       типа так range(pos_x, pos_x + int(box.diag[0] / abs(box.diag[0])) * (1 + abs(box.diag[0])), stepX)
-
     stepX = int(box.diag[0] / abs(box.diag[0]))  ###     vector / |vector|  - будет 1 или -1
     stepY = int(box.diag[1] / abs(box.diag[1]))
     stepZ = int(box.diag[2] / abs(box.diag[2]))
@@ -113,15 +117,11 @@ def is_fit(box, container, position, box_dict):
                     continue
 
                 #   чтобы под коробкой не оказалось хрупкой коробки
-                if i > 0 and container.space[k][j][i] != None:
-                    if box_dict[container.space[k][j][i]].fragile:
+                if i > 0 and container.space[k][j][i - 1] != None:
+                    if box_dict[container.space[k][j][i - 1]].fragile:
                         return False
 
-                try:
-                    if container.space[k][j][i] != None:
-                        return False
-                except Exception as e:
-                    print("INDEX ERROR", [k, j, i], str(e))
+                if container.space[k][j][i] != None:
                     return False
 
     return True

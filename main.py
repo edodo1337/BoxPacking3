@@ -48,17 +48,17 @@ if namespace.mode == 'file':
     read_data('input.json')
 
 else:   # Рандомный набор коробок
-    box_count = 15     # количество коробок
+    box_count = 12     # количество коробок
     max_size = 3        # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1   # минимальный разрмер
-    #min_size = 5
+    #min_size = 1
     for i in range(box_count):
         # is_fragile = (i % (max_size / 15)) == 0 #  каждая 15-я коробка будет хрупкой
         # print('asd', is_fragile)
         #is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
         is_rotatebleXYZ = [True]*3
         boxes.append(
-            Box([random.randint(min_size, max_size) for j in range(3)], 5, fragile=False, is_rotatebleXYZ=is_rotatebleXYZ))
+            Box([random.randint(min_size, max_size) for j in range(3)], 5, fragile=random.randint(0,100)%3 == 0, is_rotatebleXYZ=is_rotatebleXYZ))
 
     # for i in range(box_count//5):
     #     boxes.append(Box([random.randint(max_size // 4, max_size // 2) for i in range(3)], 5, True, [False] * 3))
@@ -78,6 +78,8 @@ length = len(boxes)
 ind = 0
 packed = [0]*len(boxes) # состояние коробки по ее id, количество попыток ее упаковать
 _boxes = []
+
+print(cont.size)
 print(layer_packed)
 print('Packed {} of {}'.format(ind, length))
 
