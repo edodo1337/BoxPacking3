@@ -53,12 +53,13 @@ else:   # Рандомный набор коробок
     min_size = max_size // 4 if max_size // 4 != 0 else 1   # минимальный разрмер
     #min_size = 1
     for i in range(box_count):
-        # is_fragile = (i % (max_size / 15)) == 0 #  каждая 15-я коробка будет хрупкой
-        # print('asd', is_fragile)
         #is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
         is_rotatebleXYZ = [True]*3
+        box_fragile = random.randint(0, 100)%3 == 1
+        box_size = [random.randint(min_size, max_size) for j in range(3)]
+        box_mass = box_size[0]*box_size[1]*box_size[2]/(2 if box_fragile else 1)
         boxes.append(
-            Box([random.randint(min_size, max_size) for j in range(3)], 5, fragile=random.randint(0,100)%3 == 0, is_rotatebleXYZ=is_rotatebleXYZ))
+            Box(size=box_size, mass=box_mass, fragile=box_fragile, is_rotatebleXYZ=is_rotatebleXYZ))
 
     # for i in range(box_count//5):
     #     boxes.append(Box([random.randint(max_size // 4, max_size // 2) for i in range(3)], 5, True, [False] * 3))
@@ -79,14 +80,23 @@ ind = 0
 packed = [0]*len(boxes) # состояние коробки по ее id, количество попыток ее упаковать
 _boxes = []
 
-print(cont.size)
-print(layer_packed)
+print('Layer packed:', layer_packed)
 print('Packed {} of {}'.format(ind, length))
+
+center_of_mass = [0, 0, 0] # X, Y, Z (центр тяжести общий)
+sum_mass = 0    # суммарная масса коробок
 
 while boxes:  # цикл по коробкам, пытаемся поместить
     box = boxes.pop(0)  # вынимается первая коробка в очереди
     pos = find_place(cont, box, box_dict, layer_packed)
     if pos is not None:
+        center_of_mass = [
+            (center_of_mass[0] * sum_mass + box.mass * (pos[0] + box.diag[0] / 2)) / (sum_mass + box.mass),
+            (center_of_mass[1] * sum_mass + box.mass * (pos[1] + box.diag[1] / 2)) / (sum_mass + box.mass),
+            (center_of_mass[2] * sum_mass + box.mass * (pos[2] + box.diag[2] / 2)) / (sum_mass + box.mass)
+        ]
+        sum_mass += box.mass
+
         ind += 1
         _boxes.append(box)
         cont.put(box, pos)
@@ -99,7 +109,8 @@ while boxes:  # цикл по коробкам, пытаемся помести�
     print('Packed {} of {}'.format(ind, length))
 
 print('Program execution time {}'.format(time.time() - start_time))
-print(layer_packed)
+print('Layer packed:', layer_packed)
+print('Center of mass:', [round(i, 2) for i in center_of_mass])
 
 write_positions("output.json", _boxes)  # запись в файл
 
