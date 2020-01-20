@@ -29,6 +29,7 @@ class AbstractContainer:
         self.size = size
         self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in
                       range(self.size[0])]
+        self.space_point = []
         self.items = {}
 
     #   метод, который помещает коробку в спейс контейнера
@@ -44,6 +45,9 @@ class AbstractContainer:
             for j in range(position[1], position[1] + box.diag[1], stepY):  # Y
                 for k in range(position[0], position[0] + box.diag[0], stepX):  # X
                     self.space[k][j][i] = box.id
+                    # print(self.space_free[k][j][i])
+                    # self.space_point.append([k,j,i])
+                    # self.space_free.remove(self.space_free[k][j][i])
         box.putOnPos(position)
         self.items[str(box.id)] = box
 
@@ -53,7 +57,6 @@ class AbstractContainer:
             for j in range(box.position[1], box.position[1] + box.size[1]):  # Y
                 for k in range(box.position[0], box.position[0] + box.size[0]):  # X
                     self.space[k][j][i] = None
-
         del self.items[str(box.id)]
 
     #   метод для вывода спейса контейнера в консоль (послойно)
