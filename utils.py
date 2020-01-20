@@ -84,7 +84,7 @@ def find_place(container, box, box_dict, layer_packed, proect_x, proect_y, proec
             j += 1
         i += 1
 
-    print('---No place size: {} balanced: {}, fit: {}'.format(box.diag, flag_balanced, flag_fit))
+    print('---No place size: {} balanced: {}, fit: {}'.format(box.diag, flag_balanced, flag_fit_n))
     return None
 
 def is_fit_new(box, container, position, box_dict, proections_x, proections_y, proections_z, put_boxes):
@@ -119,16 +119,16 @@ def is_fit_new(box, container, position, box_dict, proections_x, proections_y, p
         for select_box in put_boxes:
             x, y, z = select_box.size
             px, py, pz = select_box.position
-            check_xy = check_rectangle([pos_x, pos_y], [pos_x + box_x, pos_y + box_z], [px, py], [px + x, py + y])  # XY
+
+            check_xy = check_rectangle([pos_x, pos_y], [pos_x + box_x, pos_y + box_y], [px, py], [px + x, py + y])  # XY
             check_xz = check_rectangle([pos_x, pos_z], [pos_x + box_x, pos_z + pos_z], [px, pz], [px + x, pz + z])  # XZ
             check_yz = check_rectangle([pos_y, pos_z], [pos_y + box_y, pos_z + pos_z], [py, pz], [py + y, pz + z])  # YZ
 
-            if not check_xy and not check_xz and not check_yz:
+            if (not check_xy) and (not check_xz) and (not check_yz):
                 return False
     return True
 
 def check_rectangle(pos1, diag1, pos2, diag2):
-
     # проверка перывх проекций
     if (pos1[0] <= pos2[0] < diag1[0]) or (pos1[0] < diag2[0] <= diag1[0]) \
             or (pos2[0] <= pos1[0] < diag2[0]) or (pos2[0] < diag1[0] <= diag2[0]):
@@ -137,6 +137,7 @@ def check_rectangle(pos1, diag1, pos2, diag2):
                 or (pos2[1] <= pos1[1] < diag2[1]) or (pos2[1] < diag1[1] <= diag2[1]):
             return False
     return True
+
 
 def is_fit(box, container, position, box_dict):
     #   проверяет, может ли коробка поместиться с углом в данной точке (position)
