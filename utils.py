@@ -21,7 +21,7 @@ def obj3D_functional(box):  # !!!не используется
     return k1 * box.size[2] + k2 * box.size[0] * box.size[1] * box.size[2]
 
 
-def find_place(container, box, box_dict, layer_packed, proect_x, proect_y, proect_z, put_boxes):
+def find_place(container, box, box_dict, layer_packed, put_boxes):
     #   метод для поиска позиции (первой удачной), в которую можно поместить
     #   коробку. Возвращает позицию [x,y,z], если не найдена - None
 
@@ -30,7 +30,6 @@ def find_place(container, box, box_dict, layer_packed, proect_x, proect_y, proec
     #   вращать и поместить опять (в ту же точку)
 
     flag_fit = False
-    flag_fit_n = False
     flag_balanced = False
     cont_x, cont_y, cont_z = container.size
 
@@ -49,10 +48,10 @@ def find_place(container, box, box_dict, layer_packed, proect_x, proect_y, proec
             while k < cont_x:  # X
                 point = container.space[k][j][i]
                 if point == None:
-                    flag_balanced = is_balanced(box, container, [k, j, i], box_dict)
+                    # flag_balanced = is_balanced(box, container, [k, j, i], box_dict)
                     # flag_fit = is_fit(box, container, [k, j, i], box_dict)
-                    flag_fit_n = is_fit_new(box, container, [k, j, i], box_dict, proect_x, proect_y, proect_z, put_boxes)
-                    if flag_fit_n and flag_balanced:
+                    flag_fit = is_fit_new(box, container, [k, j, i], box_dict, put_boxes)
+                    if flag_fit :
                         bsize_x, bsize_y, bsize_z = box.size
                         for layer in range(i, i + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
                             layer_packed[layer] -= bsize_x * bsize_y
@@ -60,16 +59,16 @@ def find_place(container, box, box_dict, layer_packed, proect_x, proect_y, proec
                         return [k, j, i]
                     else:
                         var = 0
-                        while not flag_fit_n or not flag_balanced:
+                        while not flag_fit:
                             if var > 27:  # 3^3
                                 k += 1
                                 box.load_identity()
                                 break
                             box.tryRotations(var)
-                            flag_balanced = is_balanced(box, container, [k, j, i], box_dict)
-                            flag_fit_n = is_fit_new(box, container, [k, j, i], box_dict, proect_x, proect_y, proect_z, put_boxes)
+                            # flag_balanced = is_balanced(box, container, [k, j, i], box_dict)
+                            flag_fit = is_fit_new(box, container, [k, j, i], box_dict, put_boxes)
                             # flag_fit = is_fit(box, container, [k, j, i], box_dict)
-                            if flag_fit_n and flag_balanced:
+                            if flag_fit :
                                 bsize_x, bsize_y, bsize_z = box.size
                                 for layer in range(i, i + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
                                     layer_packed[layer] -= bsize_x * bsize_y
@@ -84,10 +83,10 @@ def find_place(container, box, box_dict, layer_packed, proect_x, proect_y, proec
             j += 1
         i += 1
 
-    print('---No place size: {} balanced: {}, fit: {}'.format(box.diag, flag_balanced, flag_fit_n))
+    print('---No place size: {} balanced: {}, fit: {}'.format(box.diag, flag_balanced, flag_fit))
     return None
 
-def is_fit_new(box, container, position, box_dict, proections_x, proections_y, proections_z, put_boxes):
+def is_fit_new(box, container, position, box_dict, put_boxes):
     pos_x, pos_y, pos_z = position
     cont_size_x, cont_size_y, cont_size_z = container.size
     box_x, box_y, box_z = box.size
@@ -97,24 +96,14 @@ def is_fit_new(box, container, position, box_dict, proections_x, proections_y, p
         return False
     if (pos_z + box.diag[2] < 0) or (pos_y + box.diag[1] < 0) or (pos_x + box.diag[0] < 0):
         return False
-    #       !!!не пересекает ли другие коробки и нет ли снизу хрупких
-    #       Способ проекций через отрезки:
-    # for i in range(0, len(proections_x)):
-    #     x = proections_x[i]
-    #     y = proections_y[i]
-    #     z = proections_z[i]
-    #     # print('1 x', x[0], pos_x, x[1], 'y', y[0], pos_y, y[1], 'z', z[0], pos_z, z[1])
-    #     # print('2 x', x[0], pos_x + box_x, x[1], 'y', y[0], pos_y + box_y, y[1], 'z', z[0], pos_z + box_z, z[1])
-    #     if x != None:
-    #         if x[0] <= pos_x < x[1] or x[0] < pos_x + box_x <= x[1]:
-    #             if y[0] <= pos_y < y[1] or y[0] < pos_y + box_y <= y[1]:
-    #                 if z[0] <= pos_z < z[1] or z[0] < pos_z + box_z <= z[1]:
-    #                     return False
-    #         elif pos_x <= x[0] and pos_x + box_x >= x[1] and pos_y <= y[0] and pos_y + box_y >= y[1] and pos_z <= z[0] and pos_z + box_z >= z[1]:
-    #             return False
+    # point5 - центр
+    # point6, point7 - доп точки (использовались для хрпких кообок)
+    point1 = point2 = point3 = point4 = point5 = point6 = point7 = False
+    if pos_z == 0:
+        point1 = point2 = point3 = point4 = point5 = point6 = point7 = True
 
-          # !!!не пересекает ли другие коробки и нет ли снизу хрупких
-          # Способ проекций:
+    # не пересекает ли другие коробки и нет ли снизу хрупких
+    # Способ проекций:
     if put_boxes != []:
         for select_box in put_boxes:
             x, y, z = select_box.size
@@ -126,9 +115,55 @@ def is_fit_new(box, container, position, box_dict, proections_x, proections_y, p
 
             if (not check_xy) and (not check_xz) and (not check_yz):
                 return False
+            # нет ли вверху коробки, когда ставим хрупкую
+            if box.fragile and pos_z + box_z == pz and not check_xy:
+                return False
+            if pz + z == pos_z:
+                # нет ли внизу хрупкой коробки
+                if select_box.fragile:
+                    if not check_xy:
+                        return False
+                else:
+                    # стоят ли углы на других коробках
+                    if not point1:
+                        point1 = is_balans([pos_x + 0.1, pos_y + 0.1], [px, py], [px + x, py + y])
+                    if not point2:
+                        point2 = is_balans([pos_x + 0.1, pos_y + box_y - 0.1], [px, py], [px + x, py + y])
+                    if not point3:
+                        point3 = is_balans([pos_x + box_x - 0.1, pos_y + box_y - 0.1], [px, py], [px + x, py + y])
+                    if not point4:
+                        point4 = is_balans([pos_x + box_x - 0.1, pos_y + 0.1], [px, py], [px + x, py + y])
+                    if not point5:
+                        point5 = is_balans([pos_x + box_x / 2, pos_y + box_y / 2], [px, py], [px + x, py + y])
+
+    #                 if box.fragile:
+    #                     if not point6:
+    #                         point6 = is_balans2([pos_x + box_x * 3 / 4, pos_y + box_y / 4], [px, py], [px + x, py + y])
+    #                     if not point7:
+    #                         point7 = is_balans2([pos_x + box_x / 4, pos_y + box_y * 3 / 4], [px, py], [px + x, py + y])
+    # if box.fragile:
+    #     if not point6 or not point7:
+    #         return False
+    if not point1 or not point2 or not point3 or not point4 or not point5:
+        return False
     return True
 
+def is_balans(pos1, pos2, diag2):
+    # проверка на принадлежность точки прямоугольнику
+    if (pos2[0] < pos1[0] < diag2[0]):
+        if (pos2[1] < pos1[1] < diag2[1]):
+            return True
+    return False
+
+def is_balans2(pos1, pos2, diag2):
+    # проверка на принадлежность точки прямоугольнику
+    if (pos2[0] <= pos1[0] <= diag2[0]):
+        if (pos2[1] <= pos1[1] <= diag2[1]):
+            return True
+    return False
+
 def check_rectangle(pos1, diag1, pos2, diag2):
+    # проверка пересейчения двух прямоугольников
     # проверка перывх проекций
     if (pos1[0] <= pos2[0] < diag1[0]) or (pos1[0] < diag2[0] <= diag1[0]) \
             or (pos2[0] <= pos1[0] < diag2[0]) or (pos2[0] < diag1[0] <= diag2[0]):
@@ -139,7 +174,55 @@ def check_rectangle(pos1, diag1, pos2, diag2):
     return True
 
 
-def is_fit(box, container, position, box_dict):
+
+def is_balanced(box, cont, position, box_dict):     # !!! старая версия
+    #       сбалансированность корокбки. считает, что коробка сбалансирована, если под 4 углами что-то есть
+    #       возвращает True, если норм
+
+    pos_x, pos_y, pos_z = position
+    if pos_z == 0:
+        return True
+
+    centerX, centerY = (box.diag[0] // 2 + pos_x), (box.diag[1] // 2 + pos_y)
+
+    cont_size_x, cont_size_y, cont_size_z = cont.size
+
+    if (centerY > cont_size_y - 1) or (centerY < 0):
+        # print('--out of cont')
+        return False
+
+    if (centerX > cont_size_x - 1) or (centerX < 0):
+        # print('--out of cont')
+        return False
+
+
+    #       проверяет наличие чего-нибудь под 4-мя углами коробки
+    x, y, z = position
+    try:
+        if (cont.space[x][y][z - 1] == None or cont.space[x + box.diag[0] - 1][y][z - 1] == None
+                or cont.space[x + box.diag[0] - 1][y + box.diag[1] - 1][z - 1] == None or
+                cont.space[x][y + box.diag[1] - 1][z - 1] == None):
+            return False
+        elif box_dict[cont.space[x][y][z - 1]].fragile:
+            return False
+        else:
+            return True
+    except IndexError:
+        return False
+
+    #       то же самое, но с тремя углами
+    # r_d = cont.space[x][y][z - 1] == None
+    # r_u = cont.space[x + box.size[0] - 1][y][z - 1] == None
+    # l_u = cont.space[x + box.size[0] - 1][y + box.size[1] - 1][z - 1] == None
+    # l_d = cont.space[x][y + box.size[1] - 1][z - 1] == None
+    #
+    # if sum([r_d, r_u, l_u, l_d])<3:
+    #     return False
+    # else True
+
+    ##return False if (cont.space[centerX][centerY][position[2] - 1] == None) else True
+
+def is_fit(box, container, position, box_dict):  # !!! старая версия
     #   проверяет, может ли коробка поместиться с углом в данной точке (position)
     #   и не пересекает ли при этом дргуие коробки
     #   возвращает True, если норм
@@ -198,54 +281,6 @@ def is_fragile(container, box_dict, k, j, i):
     if container.space[k][j][i] != None:
         return False
     return True
-
-def is_balanced(box, cont, position, box_dict):
-    #       сбалансированность корокбки. считает, что коробка сбалансирована, если под 4 углами что-то есть
-    #       возвращает True, если норм
-
-    pos_x, pos_y, pos_z = position
-    if pos_z == 0:
-        return True
-
-    centerX, centerY = (box.diag[0] // 2 + pos_x), (box.diag[1] // 2 + pos_y)
-
-    cont_size_x, cont_size_y, cont_size_z = cont.size
-
-    if (centerY > cont_size_y - 1) or (centerY < 0):
-        # print('--out of cont')
-        return False
-
-    if (centerX > cont_size_x - 1) or (centerX < 0):
-        # print('--out of cont')
-        return False
-
-
-    #       проверяет наличие чего-нибудь под 4-мя углами коробки
-    x, y, z = position
-    try:
-        if (cont.space[x][y][z - 1] == None or cont.space[x + box.diag[0] - 1][y][z - 1] == None
-                or cont.space[x + box.diag[0] - 1][y + box.diag[1] - 1][z - 1] == None or
-                cont.space[x][y + box.diag[1] - 1][z - 1] == None):
-            return False
-        elif box_dict[cont.space[x][y][z - 1]].fragile:
-            return False
-        else:
-            return True
-    except IndexError:
-        return False
-
-    #       то же самое, но с тремя углами
-    # r_d = cont.space[x][y][z - 1] == None
-    # r_u = cont.space[x + box.size[0] - 1][y][z - 1] == None
-    # l_u = cont.space[x + box.size[0] - 1][y + box.size[1] - 1][z - 1] == None
-    # l_d = cont.space[x][y + box.size[1] - 1][z - 1] == None
-    #
-    # if sum([r_d, r_u, l_u, l_d])<3:
-    #     return False
-    # else True
-
-    ##return False if (cont.space[centerX][centerY][position[2] - 1] == None) else True
-
 
 def is_intersect(box1, box2, position):  # !!!не используется (пытался определять пересечения 2х коробок)
     pass

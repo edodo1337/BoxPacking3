@@ -77,25 +77,20 @@ length = len(boxes)
 ind = 0
 packed = [0] * len(boxes)  # состояние коробки по ее id, количество попыток ее упаковать
 _boxes = []
-
+not_put_box = []
 # print('Layer packed:', layer_packed)
 # print('Packed {} of {}'.format(ind, length))
 
 center_of_mass = [0, 0, 0]  # X, Y, Z (центр тяжести общий)
 sum_mass = 0  # суммарная масса коробок
 
-proection_X = []
-proection_Y = []
-proection_Z = []
-# put_boxes = []
 
 while boxes:  # цикл по коробкам, пытаемся поместить
     box = boxes.pop(0)  # вынимается первая коробка в очереди
-    pos = find_place(cont, box, box_dict, layer_packed, proection_X, proection_Y, proection_Z, _boxes)
+    # проверить длины коробки
+
+    pos = find_place(cont, box, box_dict, layer_packed, _boxes)
     if pos is not None:
-        proection_X.append([pos[0], pos[0] + box.size[0]])
-        proection_Y.append([pos[1], pos[1] + box.size[1]])
-        proection_Z.append([pos[2], pos[2] + box.size[2]])
         center_of_mass = [
             (center_of_mass[0] * sum_mass + box.mass * (pos[0] + box.diag[0] / 2)) / (sum_mass + box.mass),
             (center_of_mass[1] * sum_mass + box.mass * (pos[1] + box.diag[1] / 2)) / (sum_mass + box.mass),
@@ -105,23 +100,23 @@ while boxes:  # цикл по коробкам, пытаемся помести�
 
         ind += 1
         _boxes.append(box)
-        # put_boxes.append(box)
         cont.put(box, pos)
     else:  # если коробка не поместилась она перемещается в конец очереди
         packed[box.id] += 1
         if packed[box.id] > 2:  # если 2 раза коробка не поместилась, значит не судьба
+            not_put_box.append(box)
             break
         else:
             boxes.append(box)
     print('Packed {} of {}'.format(ind, length))
-
+CONT_X, CONT_Y, CONT_Z = cont.size
 print('Program execution time {}'.format(time.time() - start_time))
 print('Layer packed:', layer_packed)
 print('Center of mass:', [round(i, 2) for i in center_of_mass],     # центр тяжести фактический
       'Should be at:', [CONT_X / 2, CONT_Y / 2, CONT_Z / 2],        # центр тяжести идеальный
       'Deviation:', [round((i - j / 2) * 2 / j, 2) for i, j in zip(center_of_mass, cont.size)]) # относительное отклонение
-# print('Cont.space', cont.space)
-# print('Cont.space_free', cont.space_point)
+print('Count put box', len(_boxes))
+
 
 write_positions("output.json", _boxes)  # запись в файл
 

@@ -1,7 +1,7 @@
 [
   {
     "type": "box",
-    "mass": 5,
+    "mass": 1,
     "fragile": false,
     "size": [2,2,1],
     "count": 10,
@@ -10,7 +10,7 @@
 
   {
     "type": "box",
-    "mass": 5,
+    "mass": 2,
     "fragile": false,
     "size": [2,3,1],
     "count": 10,
@@ -19,7 +19,7 @@
 
   {
     "type": "box",
-    "mass": 5,
+    "mass": 2,
     "fragile": false,
     "size": [2,1,4],
     "count": 10,
@@ -28,7 +28,7 @@
 
   {
     "type": "box",
-    "mass": 5,
+    "mass": 3,
     "fragile": false,
     "size": [3,1,2],
     "count": 10,
@@ -37,7 +37,7 @@
 
   {
     "type": "box",
-    "mass": 5,
+    "mass": 3,
     "fragile": true,
     "size": [3,3,2],
     "count": 10,
@@ -64,7 +64,7 @@
 
   {
     "type": "box",
-    "mass": 5,
+    "mass": 4,
     "fragile": false,
     "size": [1,4,2],
     "count": 1,
@@ -72,7 +72,7 @@
   },
   {
     "type": "box",
-    "mass": 5,
+    "mass": 6,
     "fragile": false,
     "size": [3,6,4],
     "count": 2,
@@ -80,7 +80,7 @@
   },
   {
     "type": "box",
-    "mass": 5,
+    "mass": 4,
     "fragile": false,
     "size": [4,4,2],
     "count": 2,
@@ -98,7 +98,7 @@
 
   {
     "type": "box",
-    "mass": 5,
+    "mass": 1,
     "fragile": false,
     "size": [1,1,2],
     "count": 3,
