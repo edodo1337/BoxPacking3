@@ -206,13 +206,13 @@ def remove_point(cont_points, box, position, put_boxes):
                             if is_balans([c_point[0] + 1, c_point[0] + 1], [px, py],
                                          [px + select_box.size[0], py + select_box.size[1]]):
                                 check1 = True
-                            if is_balans([c_point[0] + 1, c_point[0] + 1], [px, py],
+                            if is_balans([c_point[0] + 1, c_point[0] - 1], [px, py],
                                          [px + select_box.size[0], py + select_box.size[1]]):
                                 check2 = True
-                            if is_balans([c_point[0] + 1, c_point[0] + 1], [px, py],
+                            if is_balans([c_point[0] - 1, c_point[0] - 1], [px, py],
                                          [px + select_box.size[0], py + select_box.size[1]]):
                                 check3 = True
-                            if is_balans([c_point[0] + 1, c_point[0] + 1], [px, py],
+                            if is_balans([c_point[0] - 1, c_point[0] + 1], [px, py],
                                          [px + select_box.size[0], py + select_box.size[1]]):
                                 check4 = True
                         if check1 and check2 and check3 and check4:

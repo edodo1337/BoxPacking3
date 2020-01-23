@@ -10,9 +10,9 @@ start_time = time.time()
 
 # boxdb = BoxDatabase()
 #   размеры контейнера
-CONT_X = 15
-CONT_Y = 15
-CONT_Z = 15
+CONT_X = 16
+CONT_Y = 16
+CONT_Z = 16
 
 cont = Container([CONT_X, CONT_Y, CONT_Z])
 boxes = []
@@ -58,7 +58,7 @@ if namespace.mode == 'file':
     read_data('input.json')
 
 else:  # Рандомный набор коробок
-    box_count = 50  # количество коробок
+    box_count = 100  # количество коробок
     max_size = 5  # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1  # минимальный разрмер
     # min_size = 5

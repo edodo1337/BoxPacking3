@@ -16,6 +16,23 @@
     "count": 16,
     "is_rotatableXYZ": [true, true, true]
   },
+  {
+    "type": "box",
+    "mass": 1,
+    "fragile": false,
+    "size": [1,2,2],
+    "count": 26,
+    "is_rotatableXYZ": [true, true, true]
+  },
+  {
+    "type": "box",
+    "mass": 1,
+    "fragile": false,
+    "size": [1,1,1],
+    "count": 26,
+    "is_rotatableXYZ": [true, true, true]
+  },
+
    {
     "type": "box",
     "mass": 1,
