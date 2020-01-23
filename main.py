@@ -26,6 +26,13 @@ def read_data(filename):
         # print(item)
         if item['type'] == 'box':
             size = item['size']
+            if size[2] > size[1]:
+                size[1], size[2] = size[2], size[1]
+            if size[2] > size[0]:
+                size[0], size[2] = size[2], size[0]
+            if size[1] > size[0]:
+                size[0], size[1] = size[1], size[0]
+
             mass = item['mass']
             fragile = item['fragile']
             is_rotatableXYZ = item['is_rotatableXYZ']
@@ -77,7 +84,6 @@ length = len(boxes)
 ind = 0
 packed = [0] * len(boxes)  # состояние коробки по ее id, количество попыток ее упаковать
 _boxes = []
-not_put_box = []
 # print('Layer packed:', layer_packed)
 # print('Packed {} of {}'.format(ind, length))
 
@@ -87,9 +93,10 @@ sum_mass = 0  # суммарная масса коробок
 
 while boxes:  # цикл по коробкам, пытаемся поместить
     box = boxes.pop(0)  # вынимается первая коробка в очереди
-    # проверить длины коробки
+    # (?) проверить длины коробки чтобы сначала пробовать поместить коробки горизонтально
 
-    pos = find_place(cont, box, box_dict, layer_packed, _boxes)
+    # pos = find_place(cont, box, box_dict, layer_packed, _boxes)
+    pos = find_point(cont, box, box_dict, layer_packed, _boxes)
     if pos is not None:
         center_of_mass = [
             (center_of_mass[0] * sum_mass + box.mass * (pos[0] + box.diag[0] / 2)) / (sum_mass + box.mass),
@@ -104,20 +111,19 @@ while boxes:  # цикл по коробкам, пытаемся помести�
     else:  # если коробка не поместилась она перемещается в конец очереди
         packed[box.id] += 1
         if packed[box.id] > 2:  # если 2 раза коробка не поместилась, значит не судьба
-            not_put_box.append(box)
             break
         else:
             boxes.append(box)
     print('Packed {} of {}'.format(ind, length))
 CONT_X, CONT_Y, CONT_Z = cont.size
 print('Program execution time {}'.format(time.time() - start_time))
-print('Layer packed:', layer_packed)
+# print('Layer packed:', layer_packed)
 print('Center of mass:', [round(i, 2) for i in center_of_mass],     # центр тяжести фактический
       'Should be at:', [CONT_X / 2, CONT_Y / 2, CONT_Z / 2],        # центр тяжести идеальный
       'Deviation:', [round((i - j / 2) * 2 / j, 2) for i, j in zip(center_of_mass, cont.size)]) # относительное отклонение
 print('Count put box', len(_boxes))
 
-
+# print(cont.points)
 write_positions("output.json", _boxes)  # запись в файл
 
 new_drawing.draw("output.json", cont.size[0], cont.size[1], cont.size[2], _boxes)

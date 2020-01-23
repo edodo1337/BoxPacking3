@@ -28,7 +28,7 @@ def find_place(container, box, box_dict, layer_packed, put_boxes):
     #   цикл по спейсу контейнера, проверяем, если ячейка не занята (None)
     #   и коробка устойчива и помещается, если нет то пытаемся ее
     #   вращать и поместить опять (в ту же точку)
-
+    # find_point(container, box, box_dict, layer_packed, put_boxes)
     flag_fit = False
     flag_balanced = False
     cont_x, cont_y, cont_z = container.size
@@ -66,8 +66,8 @@ def find_place(container, box, box_dict, layer_packed, put_boxes):
                                 break
                             box.tryRotations(var)
                             # flag_balanced = is_balanced(box, container, [k, j, i], box_dict)
-                            flag_fit = is_fit_new(box, container, [k, j, i], box_dict, put_boxes)
                             # flag_fit = is_fit(box, container, [k, j, i], box_dict)
+                            flag_fit = is_fit_new(box, container, [k, j, i], box_dict, put_boxes)
                             if flag_fit :
                                 bsize_x, bsize_y, bsize_z = box.size
                                 for layer in range(i, i + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
@@ -85,6 +85,91 @@ def find_place(container, box, box_dict, layer_packed, put_boxes):
 
     print('---No place size: {} balanced: {}, fit: {}'.format(box.diag, flag_balanced, flag_fit))
     return None
+
+def find_point(container, box, box_dict, layer_packed, put_boxes):
+    #   Стоит делить все пространство контейнера на части (возможно по 50 т.к. контейнер меньше 100 не может быть)
+    #   ели св пр-во на данном уровне в данном секторе закончилось, удаляем все, в нем находящиеся точки
+    cont_points = container.points
+    cont_points.sort(key=lambda cont_points:  cont_points[0]*cont_points[0] + cont_points[1]*cont_points[1], reverse=False)
+    cont_points.sort(key=lambda cont_points:  cont_points[2], reverse=False)
+    # print(cont_points)
+    flag_fit = False
+    bsize_x, bsize_y, bsize_z = box.size
+    i = 0
+    while i < len(cont_points):
+        # print('1')
+        point = cont_points[i]
+        count_empty_block = layer_packed[point[2]]
+        if count_empty_block < bsize_x * bsize_y and count_empty_block < bsize_x * bsize_z and count_empty_block < bsize_z * bsize_y:
+            # print('Full layer', i)
+            continue
+        flag_fit = is_fit_new(box, container, point, box_dict, put_boxes)
+        if flag_fit:
+            bsize_x, bsize_y, bsize_z = box.size
+            for layer in range(point[2], point[2] + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
+                layer_packed[layer] -= bsize_x * bsize_y
+            # container.points.remove(point)
+            container.points = remove_point(cont_points, box, point)
+
+            # if point[0] + bsize_x < container.size[0]:
+            #     container.points.append([point[0] + bsize_x, point[1], point[2]])
+            # if point[1] + bsize_y < container.size[1] or point[0] + bsize_x < container.size[0]:
+            #     container.points.append([point[0] + bsize_x, point[1] + bsize_y, point[2]])
+            # if point[1] + bsize_y < container.size[1]:
+            #     container.points.append([point[0], point[1] + bsize_y, point[2]])
+            if point[2] + bsize_z < container.size[2]:
+                container.points.append([point[0], point[1], point[2] + bsize_z])
+
+            container.points.append([point[0] + bsize_x, point[1], point[2]])
+            container.points.append([point[0] + bsize_x, point[1] + bsize_y, point[2]])
+            container.points.append([point[0], point[1] + bsize_y, point[2]])
+            # container.points.append([point[0], point[1], point[2] + bsize_z])
+
+            return point
+        else:
+            var = 0
+            while not flag_fit:
+                if var > 27:  # 3^3
+                    i += 1
+                    break
+                box.tryRotations(var)
+                flag_fit = is_fit_new(box, container, point, box_dict, put_boxes)
+                if flag_fit:
+                    bsize_x, bsize_y, bsize_z = box.size
+                    for layer in range(point[2], point[2] + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
+                        layer_packed[layer] -= bsize_x * bsize_y
+                    # container.points.remove(point)
+                    container.points = remove_point(cont_points, box, point)
+                    return point
+                var += 1
+    print(False)
+    # print('---No place size: {} balanced: {}, fit: {}'.format(box.diag,  flag_fit))
+    return None
+
+def remove_point(cont_points, box, position):
+    bx, by, bz = box.size
+    px, py, pz = position
+    #    вершины коробки
+    box_points = [[px, py, pz], [px + bx, py, pz], [px + bx, py + by, pz], [px, py + by, pz],
+                  [px, py + by, pz + bz], [px + bx, py + by, pz + bz], [px + bx, py, pz + bz], [px, py, pz + bz]]
+    #   грани коробки, первая вершина всегда ближе к началу координат
+    box_face = [[box_points[0], box_points[1]], [box_points[0], box_points[3]], [box_points[0], box_points[7]],
+                [box_points[1], box_points[2]], [box_points[3], box_points[2]], [box_points[2], box_points[5]],
+                [box_points[7], box_points[4]], [box_points[7], box_points[6]],
+                [box_points[6], box_points[5]], [box_points[4], box_points[5]]]
+    # points = cont_points
+    for c_point in cont_points:
+        for face in box_face:
+            check = check_section(c_point, face[0], face[1])
+            if check:
+                if c_point in cont_points:
+                    cont_points.remove(c_point)
+                    continue
+                # else:
+                #     print(c_point)
+                #     print(cont_points)
+                #     continue
+    return cont_points
 
 def is_fit_new(box, container, position, box_dict, put_boxes):
     pos_x, pos_y, pos_z = position
@@ -155,10 +240,17 @@ def is_balans(pos1, pos2, diag2):
             return True
     return False
 
-def is_balans2(pos1, pos2, diag2):
-    # проверка на принадлежность точки прямоугольнику
-    if (pos2[0] <= pos1[0] <= diag2[0]):
-        if (pos2[1] <= pos1[1] <= diag2[1]):
+def check_section(point, section1, section2):
+    if section1[0] == section2[0] and point[0] == section1[0]:
+        if section1[1] == section2[1] and point[1] == section1[1]:  # (ху, z изм) линия вертикальна, х неизменяется (все вертикальные грани)
+            if section1[2] <= point[2] <= section2[2]:
+                return True
+        elif section1[2] == section2[2] and point[2] == section1[2]:    # (xz, у изм) линия горизонтальна, х неизменяется
+            if section1[1] <= point[1] <= section2[1]:
+                return True
+    elif section1[1] == section2[1] and section1[2] == section2[2] and \
+            point[1] == section1[1] and point[2] == section1[2]: # линия горизонтальна, х изменяется
+        if section1[0] <= point[0] <= section2[0]:
             return True
     return False
 
@@ -203,6 +295,7 @@ def is_balanced(box, cont, position, box_dict):     # !!! старая верс�
                 or cont.space[x + box.diag[0] - 1][y + box.diag[1] - 1][z - 1] == None or
                 cont.space[x][y + box.diag[1] - 1][z - 1] == None):
             return False
+        # использовалось при уходе от перебора массива конт. в fit
         elif box_dict[cont.space[x][y][z - 1]].fragile:
             return False
         else:

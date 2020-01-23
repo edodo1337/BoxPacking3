@@ -30,6 +30,7 @@ class AbstractContainer:
         self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in
                       range(self.size[0])]
         self.items = {}
+        self.points = [[0,0,0]]
 
     #   метод, который помещает коробку в спейс контейнера
     def put(self, box, position):
@@ -40,12 +41,17 @@ class AbstractContainer:
         stepX = -1 if (position[0] + box.diag[0]) == 0 else int(
             (position[0] + box.diag[0]) / abs(position[0] + box.diag[0]))
 
+
         for i in range(position[2], position[2] + box.diag[2], stepZ):  # Z
             for j in range(position[1], position[1] + box.diag[1], stepY):  # Y
                 for k in range(position[0], position[0] + box.diag[0], stepX):  # X
                     self.space[k][j][i] = box.id
         box.putOnPos(position)
         self.items[str(box.id)] = box
+
+    # def put2(self, box, position):
+    #     self.points.remove(position)
+    #     self.points.append()
 
     #   метод, который удаляет коробку из спейса контейнера (не используется)
     def pop(self, box):
