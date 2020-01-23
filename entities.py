@@ -42,10 +42,10 @@ class AbstractContainer:
             (position[0] + box.diag[0]) / abs(position[0] + box.diag[0]))
 
 
-        for i in range(position[2], position[2] + box.diag[2], stepZ):  # Z
-            for j in range(position[1], position[1] + box.diag[1], stepY):  # Y
-                for k in range(position[0], position[0] + box.diag[0], stepX):  # X
-                    self.space[k][j][i] = box.id
+        # for i in range(position[2], position[2] + box.diag[2], stepZ):  # Z
+        #     for j in range(position[1], position[1] + box.diag[1], stepY):  # Y
+        #         for k in range(position[0], position[0] + box.diag[0], stepX):  # X
+        #             self.space[k][j][i] = box.id
         box.putOnPos(position)
         self.items[str(box.id)] = box
 
@@ -100,6 +100,7 @@ class AbstractBox:  # абстрактный класс коробки
     def load_identity(self):  # начальная ориентация коробки (не используется)
         self.size = self.default_size[:]
         self.diag = [self.size[0], self.size[1], self.size[2]]
+        #self.rotation_state = 0
 
     def rotateX(self):
         if self.is_rotatableX:  # если нет запрета на вращение по оси

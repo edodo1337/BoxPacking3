@@ -3,126 +3,31 @@
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [20,20,10],
-    "count": 10,
+    "size": [4,4,2],
+    "count": 28,
     "is_rotatableXYZ": [true, true, true]
   },
 
-  {
-    "type": "box",
-    "mass": 2,
-    "fragile": false,
-    "size": [20,30,10],
-    "count": 30,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 2,
-    "fragile": false,
-    "size": [20,10,40],
-    "count": 10,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 3,
-    "fragile": false,
-    "size": [30,10,20],
-    "count": 10,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 3,
-    "fragile": true,
-    "size": [30,30,20],
-    "count": 10,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 5,
-    "fragile": false,
-    "size": [50,20,30],
-    "count": 1,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 5,
-    "fragile": false,
-    "size": [40,20,30],
-    "count": 1,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 4,
-    "fragile": false,
-    "size": [10,40,20],
-    "count": 1,
-    "is_rotatableXYZ": [true, true, true]
-  },
-  {
-    "type": "box",
-    "mass": 6,
-    "fragile": false,
-    "size": [30,60,40],
-    "count": 2,
-    "is_rotatableXYZ": [true, true, true]
-  },
-  {
-    "type": "box",
-    "mass": 4,
-    "fragile": false,
-    "size": [40,40,20],
-    "count": 7,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
-    "type": "box",
-    "mass": 5,
-    "fragile": false,
-    "size": [7,7,5],
-    "count": 0,
-    "is_rotatableXYZ": [true, true, true]
-  },
-
-  {
+   {
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [10,10,20],
-    "count": 3,
+    "size": [2,2,2],
+    "count": 16,
     "is_rotatableXYZ": [true, true, true]
   },
-  {
+   {
     "type": "box",
-    "mass": 5,
+    "mass": 1,
     "fragile": false,
-    "size": [11,8,16],
-    "count": 0,
+    "size": [3,1,1],
+    "count": 16,
     "is_rotatableXYZ": [true, true, true]
   },
-  {
-    "type": "box",
-    "mass": 5,
-    "fragile": false,
-    "size": [10,4,9],
-    "count": 0,
-    "is_rotatableXYZ": [true, true, true]
-  },
+
   {
     "type": "container",
-    "size": [140,140,140]
+    "size": [16,16,16]
   }
 
 ]

@@ -58,10 +58,10 @@ if namespace.mode == 'file':
     read_data('input.json')
 
 else:  # Рандомный набор коробок
-    box_count = 100  # количество коробок
+    box_count = 50  # количество коробок
     max_size = 5  # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1  # минимальный разрмер
-    # min_size = 1
+    # min_size = 5
     for i in range(box_count):
         is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
         #is_rotatebleXYZ = [True] * 3
@@ -110,7 +110,7 @@ while boxes:  # цикл по коробкам, пытаемся помести�
         cont.put(box, pos)
     else:  # если коробка не поместилась она перемещается в конец очереди
         packed[box.id] += 1
-        if packed[box.id] > 2:  # если 2 раза коробка не поместилась, значит не судьба
+        if packed[box.id] > 1:  # если 2 раза коробка не поместилась, значит не судьба
             break
         else:
             boxes.append(box)
@@ -123,7 +123,7 @@ print('Center of mass:', [round(i, 2) for i in center_of_mass],     # центр
       'Deviation:', [round((i - j / 2) * 2 / j, 2) for i, j in zip(center_of_mass, cont.size)]) # относительное отклонение
 print('Count put box', len(_boxes))
 
-# print(cont.points)
+#print(cont.points)
 write_positions("output.json", _boxes)  # запись в файл
 
 new_drawing.draw("output.json", cont.size[0], cont.size[1], cont.size[2], _boxes)
