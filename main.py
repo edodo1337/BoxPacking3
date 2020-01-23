@@ -10,9 +10,9 @@ start_time = time.time()
 
 # boxdb = BoxDatabase()
 #   размеры контейнера
-CONT_X = 16
-CONT_Y = 16
-CONT_Z = 16
+CONT_X = 20
+CONT_Y = 20
+CONT_Z = 20
 
 cont = Container([CONT_X, CONT_Y, CONT_Z])
 boxes = []
@@ -26,17 +26,22 @@ def read_data(filename):
         # print(item)
         if item['type'] == 'box':
             size = item['size']
-            if size[2] > size[1]:
-                size[1], size[2] = size[2], size[1]
-            if size[2] > size[0]:
-                size[0], size[2] = size[2], size[0]
-            if size[1] > size[0]:
-                size[0], size[1] = size[1], size[0]
-
             mass = item['mass']
             fragile = item['fragile']
             is_rotatableXYZ = item['is_rotatableXYZ']
             count = item['count']
+
+            if is_rotatableXYZ[0]:
+                if size[2] > size[1]:
+                    size[1], size[2] = size[2], size[1]
+            if is_rotatableXYZ[1]:
+                if size[2] > size[0]:
+                    size[0], size[2] = size[2], size[0]
+            if is_rotatableXYZ[2]:
+                if size[1] > size[0]:
+                    size[0], size[1] = size[1], size[0]
+
+
             # boxes.extend([Box(size=size, mass=mass, fragile=fragile, is_rotatebleXYZ=is_rotatableXYZ)]*count)
             for i in range(count):
                 boxes.append(Box(size=size, mass=mass, fragile=fragile, is_rotatebleXYZ=is_rotatableXYZ))
@@ -54,6 +59,8 @@ namespace = parser.parse_args(sys.argv[1:])
 
 # print(namespace)
 
+
+
 if namespace.mode == 'file':
     read_data('input.json')
 
@@ -63,8 +70,8 @@ else:  # Рандомный набор коробок
     min_size = max_size // 4 if max_size // 4 != 0 else 1  # минимальный разрмер
     # min_size = 5
     for i in range(box_count):
-        is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
-        #is_rotatebleXYZ = [True] * 3
+        #is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
+        is_rotatebleXYZ = [True] * 3
         box_fragile = random.randint(0, 100) % 12 == 1
         box_size = [random.randint(min_size, max_size) for j in range(3)]
         box_mass = box_size[0] * box_size[1] * box_size[2] / (2 if box_fragile else 1)
@@ -75,6 +82,13 @@ else:  # Рандомный набор коробок
 boxes.sort(key=lambda x: x.size[0] * x.size[1] * x.size[2], reverse=True)
 boxes.sort(key=lambda x: x.size[0] * x.size[1], reverse=True)
 boxes.sort(key=lambda x: x.fragile == True, reverse=False)
+
+#
+# mean_size_x = sum([i.size[0] for i in boxes])/len(boxes)
+# mean_size_y = sum([i.size[1] for i in boxes])/len(boxes)
+#
+
+
 
 box_dict = {box.id: box for box in boxes}  # словарь для доступа к коробке по ее id
 layer_packed = [(cont.size[0]) * (cont.size[1])] * (

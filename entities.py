@@ -183,9 +183,12 @@ class AbstractBox:  # абстрактный класс коробки
                         break
                     else:
                         self.load_identity()
-                        rotations[k]()
-                        rotations[j]()
-                        rotations[i]()
+                        if self.is_rotatableX:
+                            rotations[k]()
+                        if self.is_rotatableX:
+                            rotations[j]()
+                        if self.is_rotatableX:
+                            rotations[k]()
                         counter += 1
 
 
