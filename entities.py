@@ -88,6 +88,7 @@ class AbstractBox:  # абстрактный класс коробки
         self.is_rotatableX = is_rotatableXYZ[0]
         self.is_rotatableY = is_rotatableXYZ[1]
         self.is_rotatableZ = is_rotatableXYZ[2]
+        self.rotation_state = 0
 
     @staticmethod
     def get_count():
@@ -149,13 +150,13 @@ class AbstractBox:  # абстрактный класс коробки
     def putOnPos(self, position):
         self.position = position
 
-    def tryRotations(self, var):
+    def tryRotations(self):
         #   перебор вращений, работает кое как
         #   перебирает все (вроде бы) комбинации вращений коробки
         #   как набор вращений по 3 осям
         #   комбинация вращений кодируется 3мя числами. Напр. [0 2 3] - вращение по Y, затем по Z
         #   метод получает на вход десятичное число (фактически порядковый номер комбинации)
-
+        self.rotation_state += 1
         a = lambda: None
         rotations = {
             '0': a, # пустой метод, который ничего не делает
@@ -176,7 +177,7 @@ class AbstractBox:  # абстрактный класс коробки
                 if done:
                     break
                 for k in rotations.keys():
-                    if counter > var:
+                    if counter > self.rotation_state:
                         done = True
                         break
                     else:
