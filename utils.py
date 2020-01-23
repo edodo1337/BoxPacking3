@@ -96,20 +96,21 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
     flag_fit = False
     bsize_x, bsize_y, bsize_z = box.size
     i = 0
-    while i < len(cont_points):
-        # print('1')
-        point = cont_points[i]
+    for point in cont_points:
+        # print(i)
+        # point = cont_points[i]
         count_empty_block = layer_packed[point[2]]
         if count_empty_block < bsize_x * bsize_y and count_empty_block < bsize_x * bsize_z and count_empty_block < bsize_z * bsize_y:
             # print('Full layer', i)
             continue
-        flag_fit = is_fit_new(box, container, point, box_dict, put_boxes)
+        flag_fit =\
+            is_fit_new(box, container, point, box_dict, put_boxes)
         if flag_fit:
             bsize_x, bsize_y, bsize_z = box.size
             for layer in range(point[2], point[2] + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
                 layer_packed[layer] -= bsize_x * bsize_y
             # container.points.remove(point)
-            container.points = remove_point(cont_points, box, point)
+            container.points = remove_point(cont_points, box, point, box_dict)
 
             # if point[0] + bsize_x < container.size[0]:
             #     container.points.append([point[0] + bsize_x, point[1], point[2]])
@@ -132,21 +133,22 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
                 if var > 27:  # 3^3
                     i += 1
                     break
-                box.tryRotations(var)
+                box.tryRotations()
                 flag_fit = is_fit_new(box, container, point, box_dict, put_boxes)
                 if flag_fit:
                     bsize_x, bsize_y, bsize_z = box.size
                     for layer in range(point[2], point[2] + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
                         layer_packed[layer] -= bsize_x * bsize_y
                     # container.points.remove(point)
-                    container.points = remove_point(cont_points, box, point)
+                    container.points = remove_point(cont_points, box, point, put_boxes)
                     return point
                 var += 1
-    print(False)
+
+    print('Find point:', False)
     # print('---No place size: {} balanced: {}, fit: {}'.format(box.diag,  flag_fit))
     return None
 
-def remove_point(cont_points, box, position):
+def remove_point(cont_points, box, position, put_boxes):
     bx, by, bz = box.size
     px, py, pz = position
     #    вершины коробки
@@ -163,13 +165,30 @@ def remove_point(cont_points, box, position):
             check = check_section(c_point, face[0], face[1])
             if check:
                 if c_point in cont_points:
-                    cont_points.remove(c_point)
-                    continue
+                    if not (check_space([c_point[0] + 1, c_point[0] + 1], put_boxes)
+                            and check_space([c_point[0] + 1, c_point[0] - 1], put_boxes)
+                            and check_space([c_point[0] - 1, c_point[0] - 1], put_boxes)
+                            and check_space([c_point[0] - 1, c_point[0] + 1], put_boxes)):
+                        cont_points.remove(c_point)
+                        #continue
                 # else:
                 #     print(c_point)
                 #     print(cont_points)
                 #     continue
     return cont_points
+
+
+def check_space(point, put_boxes):
+    if point[0] < 0 and point[1] < 0:
+        return False
+    if not put_boxes:
+        for box in put_boxes:
+            point_b = box.position
+            point_d = [point_b[0] + box.diag[0], point_b[1] + box.diag[1], point_b[2] + box.diag[2]]
+            if is_balans(point, point_b, point_d):
+                return False
+
+
 
 def is_fit_new(box, container, position, box_dict, put_boxes):
     pos_x, pos_y, pos_z = position
