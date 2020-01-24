@@ -93,9 +93,10 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
     #   Стоит делить все пространство контейнера на части (возможно по 50 т.к. контейнер меньше 100 не может быть)
     #   ели св пр-во на данном уровне в данном секторе закончилось, удаляем все, в нем находящиеся точки
     cont_points = container.points
-    #cont_points.sort(key=lambda cont_points:  cont_points[0]*cont_points[0] + cont_points[1]*cont_points[1], reverse=False)
+    #cont_points.sort(key=lambda cont_points:  cont_points[0]*cont_points[0]  + cont_points[1]*cont_points[1], reverse=False)
+    cont_points.sort(key=lambda cont_points: cont_points[1], reverse=False)
     cont_points.sort(key=lambda cont_points: cont_points[0], reverse=False)
-    cont_points.sort(key=lambda cont_points:  cont_points[2], reverse=False)
+    cont_points.sort(key=lambda cont_points: cont_points[2], reverse=False)
     # print(cont_points)
     flag_fit = False
     bsize_x, bsize_y, bsize_z = box.size
@@ -154,7 +155,7 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
                     next_z = cur_z + 100000
                     next_p = None
                 else:
-                    if i==len(cont_points)-1:
+                    if i == len(cont_points) - 1:
                         return None
                     else:
                         pass
@@ -167,8 +168,8 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
                     i+=1
 
 
-    print('Find point:', False)
-    # print('---No place size: {} balanced: {}, fit: {}'.format(box.diag,  flag_fit))
+    #print('Find point:', False, i, len(cont_points))
+    print('---No place size: {}, fit: {}'.format(box.diag,  flag_fit))
     return None
 
 def remove_point(cont_points, box, position, put_boxes):
@@ -241,8 +242,8 @@ def is_fit_new(box, container, position, box_dict, put_boxes):
     #   не выходит ли за пределы контейнера
     if (pos_z + box.diag[2] > cont_size_z) or (pos_y + box.diag[1] > cont_size_y) \
             or (pos_x + box.diag[0] > cont_size_x):
-        #print(box.diag, position)
         return False
+
     if (pos_z + box.diag[2] <= 0) or (pos_y + box.diag[1] <= 0) or (pos_x + box.diag[0] <= 0):
         return False
     # point5 - центр
@@ -283,7 +284,8 @@ def is_fit_new(box, container, position, box_dict, put_boxes):
                     if not point4:
                         point4 = is_balans([pos_x + box_x - 0.1, pos_y + 0.1], [px, py], [px + x, py + y])
                     if not point5:
-                        point5 = is_balans([pos_x + box_x / 2, pos_y + box_y / 2], [px, py], [px + x, py + y])
+                        point5 = True
+                        #point5 = is_balans([pos_x + box_x / 2, pos_y + box_y / 2], [px, py], [px + x, py + y])
 
     #                 if box.fragile:
     #                     if not point6:

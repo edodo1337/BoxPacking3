@@ -3,7 +3,7 @@
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [4,4,2],
+    "size": [40,40,20],
     "count": 28,
     "is_rotatableXYZ": [true, true, true]
   },
@@ -12,7 +12,7 @@
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [2,2,2],
+    "size": [20,20,20],
     "count": 16,
     "is_rotatableXYZ": [true, true, true]
   },
@@ -20,15 +20,25 @@
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [1,2,2],
+    "size": [100,200,20],
     "count": 26,
     "is_rotatableXYZ": [true, true, true]
   },
+
   {
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [1,1,1],
+    "size": [50,200,200],
+    "count": 26,
+    "is_rotatableXYZ": [false, false, true]
+  },
+
+  {
+    "type": "box",
+    "mass": 1,
+    "fragile": false,
+    "size": [10,10,10],
     "count": 26,
     "is_rotatableXYZ": [true, true, true]
   },
@@ -37,14 +47,14 @@
     "type": "box",
     "mass": 1,
     "fragile": false,
-    "size": [3,1,1],
+    "size": [30,10,10],
     "count": 16,
     "is_rotatableXYZ": [true, true, true]
   },
 
   {
     "type": "container",
-    "size": [16,16,16]
+    "size": [160,160,160]
   }
 
 ]
