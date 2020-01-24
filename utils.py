@@ -93,9 +93,9 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
     #   Стоит делить все пространство контейнера на части (возможно по 50 т.к. контейнер меньше 100 не может быть)
     #   ели св пр-во на данном уровне в данном секторе закончилось, удаляем все, в нем находящиеся точки
     cont_points = container.points
-    #cont_points.sort(key=lambda cont_points:  cont_points[0]*cont_points[0]  + cont_points[1]*cont_points[1], reverse=False)
-    cont_points.sort(key=lambda cont_points: cont_points[1], reverse=False)
-    cont_points.sort(key=lambda cont_points: cont_points[0], reverse=False)
+    cont_points.sort(key=lambda cont_points: cont_points[0] + cont_points[1], reverse=False)
+    # cont_points.sort(key=lambda cont_points: cont_points[1], reverse=False)
+    #cont_points.sort(key=lambda cont_points: cont_points[0], reverse=False)
     cont_points.sort(key=lambda cont_points: cont_points[2], reverse=False)
     # print(cont_points)
     flag_fit = False
