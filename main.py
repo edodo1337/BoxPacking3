@@ -65,7 +65,7 @@ if namespace.mode == 'file':
     read_data('input.json')
 
 else:  # Рандомный набор коробок
-    box_count = 100  # количество коробок
+    box_count = 150  # количество коробок
     max_size = 5  # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1  # минимальный разрмер
     # min_size = 5
