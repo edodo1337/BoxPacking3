@@ -138,11 +138,23 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
             #     container.points.append([point[0], point[1] + bsize_y, point[2]])
             if point[2] + bsize_z < container.size[2]:
                 container.points.append([point[0], point[1], point[2] + bsize_z])
+                container.put_in_area([point[0], point[1], point[2] + bsize_z], box)
+
+            #
+            # min_box = None
+            # for box in put_boxes:
+
 
             container.points.append([point[0] + bsize_x, point[1], point[2]])
             container.points.append([point[0] + bsize_x, point[1] + bsize_y, point[2]])
             container.points.append([point[0], point[1] + bsize_y, point[2]])
             # container.points.append([point[0], point[1], point[2] + bsize_z])
+
+            container.put_in_area([point[0] + bsize_x, point[1], point[2]], box)
+            container.put_in_area([point[0] + bsize_x, point[1] + bsize_y, point[2]], box)
+            container.put_in_area([point[0], point[1] + bsize_y, point[2]], box)
+
+
             return point
 
         else:
@@ -284,7 +296,6 @@ def is_fit_new(box, container, position, box_dict, put_boxes):
                     if not point4:
                         point4 = is_balans([pos_x + box_x - 0.1, pos_y + 0.1], [px, py], [px + x, py + y])
                     if not point5:
-                        #point5 = True
                         point5 = is_balans([pos_x + box_x / 2, pos_y + box_y / 2], [px, py], [px + x, py + y])
 
     #                 if box.fragile:

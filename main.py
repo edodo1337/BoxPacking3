@@ -114,17 +114,14 @@ while div_x<mean_size_x or (cont.size[0]%div_x!=0 and div_x!=1):
     div_x+=1
 
 while div_y<mean_size_y or (cont.size[1]%div_y!=0 and div_y!=1):
-    div_y+=1
+    div_y += 1
 
 print('DIVIDE PARAMETERS', [cont.size[0], cont.size[1]], [mean_size_x, mean_size_y], [div_x, div_y])
-
-cont_areas = [[]*(cont.size[0]//div_x)]*(cont.size[1]//div_y)
-print(cont_areas)
+cont.divide_areas(div_x, div_y)
 
 while boxes:  # цикл по коробкам, пытаемся поместить
     box = boxes.pop(0)  # вынимается первая коробка в очереди
     # (?) проверить длины коробки чтобы сначала пробовать поместить коробки горизонтально
-it a
     # pos = find_place(cont, box, box_dict, layer_packed, _boxes)
     pos = find_point(cont, box, box_dict, layer_packed, _boxes)
     if pos is not None:

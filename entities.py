@@ -30,7 +30,58 @@ class AbstractContainer:
         # self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in
         #               range(self.size[0])]
         self.items = {}
+        self.cont_areas = []
         self.points = [[0,0,0]]
+        self.div_y = None
+        self.div_x = None
+
+    def put_in_area(self, point, box):
+        p_x, p_y, p_z = point
+        cont_x, cont_y, cont_z = self.size
+
+        x = p_x // self.div_x
+        y = p_y // self.div_y
+        print(x, y, point, self.div_x, self.div_y, )
+
+        if (p_x % self.div_x != 0) and (p_y % self.div_y != 0):
+            self.cont_areas[x][y].append(box)
+
+
+        if (x == self.size[0] // self.div_x) or (y == self.size[1] // self.div_y):
+            if y == self.size[1] // self.div_y:
+                y -= 1
+            if x == self.size[0] // self.div_x:
+                x -= 1
+            self.cont_areas[x][y].append(box)
+
+        if p_x % self.div_x == 0:
+            self.cont_areas[x][y].append(box)
+            if x != self.size[0] // self.div_x - 1:
+                self.cont_areas[x + 1][y].append(box)
+
+        elif p_y % self.div_y == 0:
+            self.cont_areas[x][y].append(box)
+            if y != self.size[1] // self.div_y - 1:
+                self.cont_areas[x][y + 1].append(box)
+
+        # if (p_x % self.div_x == 0) and x != 0 and (x < self.size[0] // self.div_x - 1):
+        #     self.cont_areas[x + 1][y].append(box)
+        #
+        # if (p_y % self.div_y == 0) and y != 0 and (y < self.size[1] // self.div_y - 1):
+        #     self.cont_areas[x][y + 1].append(box)
+        #
+        # if x == self.size[0] // self.div_x:
+        #     self.cont_areas[x - 1][y].append(box)
+        #
+        # if y == self.size[1] // self.div_y:
+        #     self.cont_areas[x][y - 1].append(box)
+
+
+
+    def divide_areas(self, div_x, div_y):
+        self.div_x, self.div_y = div_x, div_y
+        self.cont_areas = [[[] for i in range(self.size[0] // div_x)] for j in range(self.size[1] // div_y)]
+        print(len(self.cont_areas[0]))
 
     #   метод, который помещает коробку в спейс контейнера
     def put(self, box, position):
