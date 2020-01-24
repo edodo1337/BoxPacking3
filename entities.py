@@ -27,8 +27,8 @@ class AbstractContainer:
 
     def __init__(self, size):
         self.size = size
-        self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in
-                      range(self.size[0])]
+        # self.space = [[[None for k in range(self.size[2])] for j in range(self.size[1])] for i in
+        #               range(self.size[0])]
         self.items = {}
         self.points = [[0,0,0]]
 
