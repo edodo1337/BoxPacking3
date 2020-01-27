@@ -93,10 +93,8 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
     #   Стоит делить все пространство контейнера на части (возможно по 50 т.к. контейнер меньше 100 не может быть)
     #   ели св пр-во на данном уровне в данном секторе закончилось, удаляем все, в нем находящиеся точки
     cont_points = container.points
-    cont_points.sort(key=lambda cont_points: cont_points[0] + cont_points[1], reverse=False)
-    # cont_points.sort(key=lambda cont_points: cont_points[1], reverse=False)
-    #cont_points.sort(key=lambda cont_points: cont_points[0], reverse=False)
-    cont_points.sort(key=lambda cont_points: cont_points[2], reverse=False)
+    #cont_points.sort(key=lambda cont_points: cont_points[0] + cont_points[1] + 1000*cont_points[2], reverse=False)
+    cont_points.sort(key=lambda cont_points: 10*cont_points[0] + cont_points[1], reverse=False)
     # print(cont_points)
     flag_fit = False
     bsize_x, bsize_y, bsize_z = box.size
@@ -108,6 +106,50 @@ def find_point(container, box, box_dict, layer_packed, put_boxes):
     next_p = None
 
     i=0
+
+    # for point in cont_points:
+    #     flag_fit = \
+    #         is_fit_new(box, container, point, box_dict, put_boxes)
+    #     while flag_fit or box.rotation_state>=27:
+    #         if flag_fit:
+    #             bsize_x, bsize_y, bsize_z = box.size
+    #             # for layer in range(point[2], point[2] + bsize_z):  # вычитаем свободные ячейки из слоя в который положили
+    #             #     layer_packed[layer] -= bsize_x * bsize_y
+    #             # container.points.remove(point)
+    #             container.points = remove_point(cont_points, box, point, box_dict)
+    #
+    #             # if point[0] + bsize_x < container.size[0]:
+    #             #     container.points.append([point[0] + bsize_x, point[1], point[2]])
+    #             # if point[1] + bsize_y < container.size[1] or point[0] + bsize_x < container.size[0]:
+    #             #     container.points.append([point[0] + bsize_x, point[1] + bsize_y, point[2]])
+    #             # if point[1] + bsize_y < container.size[1]:
+    #             #     container.points.append([point[0], point[1] + bsize_y, point[2]])
+    #             if point[2] + bsize_z < container.size[2]:
+    #                 container.points.append([point[0], point[1], point[2] + bsize_z])
+    #                 container.put_in_area([point[0], point[1], point[2] + bsize_z], box)
+    #
+    #             #
+    #             # min_box = None
+    #             # for box in put_boxes:
+    #
+    #             container.points.append([point[0] + bsize_x, point[1], point[2]])
+    #             container.points.append([point[0] + bsize_x, point[1] + bsize_y, point[2]])
+    #             container.points.append([point[0], point[1] + bsize_y, point[2]])
+    #             # container.points.append([point[0], point[1], point[2] + bsize_z])
+    #
+    #             container.put_in_area([point[0] + bsize_x, point[1], point[2]], box)
+    #             container.put_in_area([point[0] + bsize_x, point[1] + bsize_y, point[2]], box)
+    #             container.put_in_area([point[0], point[1] + bsize_y, point[2]], box)
+    #
+    #             return point
+    #
+    #         else:
+    #             box.tryRotations()
+    #
+    # print('---No place size: {}, fit: {}'.format(box.diag, flag_fit))
+    # return None
+
+
     while i < len(cont_points):
         point = cont_points[i]
         #print('Point', i, cur_z, point[2])

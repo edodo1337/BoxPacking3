@@ -10,9 +10,9 @@ start_time = time.time()
 
 # boxdb = BoxDatabase()
 #   размеры контейнера
-CONT_X = 2000
-CONT_Y = 2000
-CONT_Z = 2000
+CONT_X = 20
+CONT_Y = 20
+CONT_Z = 20
 
 cont = Container([CONT_X, CONT_Y, CONT_Z])
 boxes = []
@@ -65,18 +65,35 @@ if namespace.mode == 'file':
     read_data('input.json')
 
 else:  # Рандомный набор коробок
-    box_count = 100  # количество коробок
-    max_size = 500  # макс размер коробки
+    box_count = 250  # количество коробок
+    max_size = 5  # макс размер коробки
     min_size = max_size // 4 if max_size // 4 != 0 else 1  # минимальный разрмер
+    output_list = []
     # min_size = 5
     for i in range(box_count):
         #is_rotatebleXYZ = [random.randint(min_size, max_size) % 2 == 0 for j in range(3)]  # рандомизация
         is_rotatebleXYZ = [True] * 3
         box_fragile = random.randint(0, 100) % 12 == 1
+        box_fragile = False
         box_size = [random.randint(min_size, max_size) for j in range(3)]
         box_mass = box_size[0] * box_size[1] * box_size[2] / (2 if box_fragile else 1)
         boxes.append(
             Box(size=box_size, mass=box_mass, fragile=box_fragile, is_rotatebleXYZ=is_rotatebleXYZ))
+        output = dict()
+        output['type'] = 'box'
+        output['mass'] = box_mass
+        output['fragile'] = box_fragile
+        output['size'] = box_size
+        output['count'] = 1
+        output['is_rotatableXYZ'] = is_rotatebleXYZ
+        output_list.append(output)
+    output = dict()
+    output['type'] = 'container'
+    output['size'] = cont.size
+    output_list.append(output)
+    output = json.dumps(output_list)
+    fout = open('input_test.json', 'w')
+    fout.write(output)
 
 #       сортировка по размеру
 boxes.sort(key=lambda x: x.size[0] * x.size[1] * x.size[2], reverse=True)
@@ -137,7 +154,7 @@ while boxes:  # цикл по коробкам, пытаемся помести�
         cont.put(box, pos)
     else:  # если коробка не поместилась она перемещается в конец очереди
         packed[box.id] += 1
-        if packed[box.id] > 1:  # если N раз коробка не поместилась, значит не судьба
+        if packed[box.id] > 2:  # если N раз коробка не поместилась, значит не судьба
             break
         else:
             boxes.append(box)

@@ -41,7 +41,7 @@ class AbstractContainer:
 
         x = p_x // self.div_x
         y = p_y // self.div_y
-        print(x, y, point, self.div_x, self.div_y, )
+        #print(x, y, point, self.div_x, self.div_y, )
 
         if (p_x % self.div_x != 0) and (p_y % self.div_y != 0):
             self.cont_areas[x][y].append(box)
@@ -81,7 +81,7 @@ class AbstractContainer:
     def divide_areas(self, div_x, div_y):
         self.div_x, self.div_y = div_x, div_y
         self.cont_areas = [[[] for i in range(self.size[0] // div_x)] for j in range(self.size[1] // div_y)]
-        print(len(self.cont_areas[0]))
+        #print(len(self.cont_areas[0]))
 
     #   метод, который помещает коробку в спейс контейнера
     def put(self, box, position):
@@ -179,25 +179,28 @@ class AbstractBox:  # абстрактный класс коробки
 
     #       вращения в обратную сторону (используется в данный момент, т.к. они работают лучше, не знаю почему)
     def rotateXi(self):
-        self.size[1], self.size[2] = self.size[2], self.size[1]
-        if self.position:
-            self.position = (Qx.dot(self.position)).tolist()
-        self.diag = (Qx.dot(self.diag)).tolist()
-        self.diag = [abs(i) for i in self.diag]
+        if self.is_rotatableX:
+            self.size[1], self.size[2] = self.size[2], self.size[1]
+            if self.position:
+                self.position = (Qx.dot(self.position)).tolist()
+            self.diag = (Qx.dot(self.diag)).tolist()
+            self.diag = [abs(i) for i in self.diag]
 
     def rotateYi(self):
-        self.size[0], self.size[2] = self.size[2], self.size[0]
-        if self.position:
-            self.position = (Qy.dot(self.position)).tolist()
-        self.diag = (Qy.dot(self.diag)).tolist()
-        self.diag = [abs(i) for i in self.diag]
+        if self.is_rotatableY:
+            self.size[0], self.size[2] = self.size[2], self.size[0]
+            if self.position:
+                self.position = (Qy.dot(self.position)).tolist()
+            self.diag = (Qy.dot(self.diag)).tolist()
+            self.diag = [abs(i) for i in self.diag]
 
     def rotateZi(self):
-        self.size[0], self.size[1] = self.size[1], self.size[0]
-        if self.position:
-            self.position = (Qz.dot(self.position)).tolist()
-        self.diag = (Qz.dot(self.diag)).tolist()
-        self.diag = [abs(i) for i in self.diag]
+        if self.is_rotatableZ:
+            self.size[0], self.size[1] = self.size[1], self.size[0]
+            if self.position:
+                self.position = (Qz.dot(self.position)).tolist()
+            self.diag = (Qz.dot(self.diag)).tolist()
+            self.diag = [abs(i) for i in self.diag]
 
     def putOnPos(self, position):
         self.position = position
@@ -234,15 +237,9 @@ class AbstractBox:  # абстрактный класс коробки
                         break
                     else:
                         self.load_identity()
-                        if k=='3':
-                            if self.is_rotatableZ:
-                                rotations[k]()
-                        if k=='2':
-                            if self.is_rotatableY:
-                                rotations[j]()
-                        if k=='1':
-                            if self.is_rotatableX:
-                                rotations[i]()
+                        rotations[k]()
+                        rotations[j]()
+                        rotations[i]()
 
                         counter += 1
 
@@ -251,6 +248,7 @@ class Box(AbstractBox):  # класс коробки (обычной)
     def __init__(self, size, mass, fragile, is_rotatebleXYZ):
         super().__init__(size, is_rotatebleXYZ)
         self.mass = mass
+        self.color_id = 1
         self.fragile = fragile
 
     def getattrs(self):
@@ -266,6 +264,7 @@ class Box(AbstractBox):  # класс коробки (обычной)
             self.diag[1],
             self.diag[2]
         ]
+        output_dict['id'] = self.color_id
 
         return [output_dict]
 
