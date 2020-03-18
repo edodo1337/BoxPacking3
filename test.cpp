@@ -33,7 +33,7 @@ int main()
     std::vector<AbstractBox> boxes;
     // boxes.reserve(10);
 
-    for (int i(0); i<100; i++)
+    for (int i(0); i<1000; i++)
     {
         AbstractBox box = AbstractBox(size, is_rotatableXYZ);
         boxes.push_back(box);
@@ -45,7 +45,9 @@ int main()
         i.rotateX();
         cont.put(i, pos);
     }
-
+    int vp[3] = { size[0], size[1], size[2]};
+    for (auto v:vp)
+        std::cout<<v;
 
     printf("Time taken: %.10fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     
