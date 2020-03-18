@@ -86,8 +86,75 @@ bool check_line_face_intersect(std::array<std::array<int,2>,2> &line,
     {
         return false;
     }
-    
 
+}
+
+std::array<int,3> prod(std::array<std::array<int,3>,3> &matrix, std::array<int,3> &vector)
+{
+        std::array<int,3> result;
+        result = {
+                matrix[0][0]*vector[0] + matrix[0][1]*vector[1] + matrix[0][2]*vector[2],
+                matrix[1][0]*vector[0] + matrix[1][1]*vector[1] + matrix[1][2]*vector[2],
+                matrix[2][0]*vector[0] + matrix[2][1]*vector[1] + matrix[2][2]*vector[2]        
+        };
+        return result;
+}
+
+std::array<std::array<int,3>,3> prod(std::array<std::array<int,3>,3> matrix1, std::array<std::array<int,3>,3> matrix2)
+{
+        std::array<std::array<int,3>,3> result;
+        result = {{
+                {
+                matrix1[0][0]*matrix2[0][0] + matrix1[0][1]*matrix2[1][0] + matrix1[0][2]*matrix2[2][0],
+                matrix1[0][0]*matrix2[0][1] + matrix1[0][1]*matrix2[1][1] + matrix1[0][2]*matrix2[2][1],
+                matrix1[0][0]*matrix2[0][2] + matrix1[0][1]*matrix2[1][2] + matrix1[0][2]*matrix2[2][2],
+                },
+                {
+                matrix1[1][0]*matrix2[0][0] + matrix1[1][1]*matrix2[1][0] + matrix1[1][2]*matrix2[2][0],
+                matrix1[1][0]*matrix2[0][1] + matrix1[1][1]*matrix2[1][1] + matrix1[1][2]*matrix2[2][1],
+                matrix1[1][0]*matrix2[0][2] + matrix1[1][1]*matrix2[1][2] + matrix1[1][2]*matrix2[2][2],
+                },
+                {
+                matrix1[2][0]*matrix2[0][0] + matrix1[2][1]*matrix2[1][1] + matrix1[2][2]*matrix2[2][0],
+                matrix1[2][0]*matrix2[0][1] + matrix1[2][1]*matrix2[1][1] + matrix1[2][2]*matrix2[2][1],
+                matrix1[2][0]*matrix2[0][2] + matrix1[2][1]*matrix2[1][2] + matrix1[2][2]*matrix2[2][2],
+                },
+        }};
+        return result;
+}
+
+std::array<int,3> prod(const std::array<const std::array<int,3>,3> &matrix, std::array<int,3> &vector)
+{
+        std::array<int,3> result;
+        result = {
+                matrix[0][0]*vector[0] + matrix[0][1]*vector[1] + matrix[0][2]*vector[2],
+                matrix[1][0]*vector[0] + matrix[1][1]*vector[1] + matrix[1][2]*vector[2],
+                matrix[2][0]*vector[0] + matrix[2][1]*vector[1] + matrix[2][2]*vector[2]        
+        };
+        return result;
+}
+
+std::array<std::array<int,3>,3> prod(const std::array<const std::array<int,3>,3> matrix1, std::array<std::array<int,3>,3> matrix2)
+{
+        std::array<std::array<int,3>,3> result;
+        result = {{
+                {
+                matrix1[0][0]*matrix2[0][0] + matrix1[0][1]*matrix2[1][0] + matrix1[0][2]*matrix2[2][0],
+                matrix1[0][0]*matrix2[0][1] + matrix1[0][1]*matrix2[1][1] + matrix1[0][2]*matrix2[2][1],
+                matrix1[0][0]*matrix2[0][2] + matrix1[0][1]*matrix2[1][2] + matrix1[0][2]*matrix2[2][2],
+                },
+                {
+                matrix1[1][0]*matrix2[0][0] + matrix1[1][1]*matrix2[1][0] + matrix1[1][2]*matrix2[2][0],
+                matrix1[1][0]*matrix2[0][1] + matrix1[1][1]*matrix2[1][1] + matrix1[1][2]*matrix2[2][1],
+                matrix1[1][0]*matrix2[0][2] + matrix1[1][1]*matrix2[1][2] + matrix1[1][2]*matrix2[2][2],
+                },
+                {
+                matrix1[2][0]*matrix2[0][0] + matrix1[2][1]*matrix2[1][1] + matrix1[2][2]*matrix2[2][0],
+                matrix1[2][0]*matrix2[0][1] + matrix1[2][1]*matrix2[1][1] + matrix1[2][2]*matrix2[2][1],
+                matrix1[2][0]*matrix2[0][2] + matrix1[2][1]*matrix2[1][2] + matrix1[2][2]*matrix2[2][2],
+                },
+        }};
+        return result;
 }
 
 
