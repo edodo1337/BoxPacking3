@@ -10,4 +10,4 @@ extern "C" {
     bool check_1d_lines_intersect(int (&line1)[2], int (&line2)[2]);
 }
 
-bool check_boxes_intersect(AbstractBox box1, AbstractBox box2);
+std::array<bool,3>* check_boxes_intersect(AbstractBox box1, AbstractBox box2);

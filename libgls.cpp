@@ -95,7 +95,7 @@ extern "C" bool check_line_face_intersect(int line[4], int face[4])
     }
 }
 
-bool check_boxes_intersect(AbstractBox box1, AbstractBox box2)
+std::array<bool,3>* check_boxes_intersect(AbstractBox box1, AbstractBox box2)
 {   
     std::array<int,3> pos1 = box1.get_position();
     std::array<int,3> pos2 = box2.get_position();
@@ -103,6 +103,7 @@ bool check_boxes_intersect(AbstractBox box1, AbstractBox box2)
     std::array<int,3> diag2 = box2.get_diag();
     std::array<int,3> size1 = box1.get_size();
     std::array<int,3> size2 = box2.get_size();
+    static std::array<bool,3> checkXYZ{false, false, false};
 
     for (int i(0); i<3; i++)
     {
@@ -113,27 +114,23 @@ bool check_boxes_intersect(AbstractBox box1, AbstractBox box2)
             pos2[i] = diag2[i] + pos2[i];
     }
 
-    for (auto i:pos1)
-        std::cout << "A " << i << std::endl;
-        
-
-    for (auto i:pos2)
-        std::cout << "A " << i << std::endl;
-
     //check the X axis
     if(std::abs(pos1[0] - pos2[0]) < (size1[0]))
     {
-      //check the Y axis
-      if(std::abs(pos1[1] - pos2[1]) < (size1[1]))
-      {
-          //check the Z axis
-          if(std::abs(pos1[2] - pos2[2]) < (size1[2]))
-          {
-             return true;
-          }
-      }
+        checkXYZ[0] = true;
+        //check the Y axis
+        if(std::abs(pos1[1] - pos2[1]) < (size1[1]))
+        {
+            checkXYZ[1] = true;
+            //check the Z axis
+            if(std::abs(pos1[2] - pos2[2]) < (size1[2]))
+            {
+                checkXYZ[2] = true;
+            }
+        }
     }
-    return false;
+
+    return &checkXYZ;
 }
 
 // int main()
