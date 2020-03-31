@@ -1,0 +1,3 @@
+#!/home/eldar/PycharmProjects/boxes_genetics/venv/bin/python
+from numba.pycc import main
+main()

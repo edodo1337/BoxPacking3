@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dc3b97d2-e5a6-4d5b-92bb-6f80183c3a76" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ZpxMVZ70hlHSDp0QbpPFRLSp92" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../logistics_new" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc3b97d2-e5a6-4d5b-92bb-6f80183c3a76" name="Default Changelist" comment="" />
+      <created>1585549788958</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585549788958</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="418" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585551156456">
+      <screen x="0" y="25" width="1920" height="1055" />
+    </state>
+    <state x="418" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.25.1920.1055@0.25.1920.1055" timestamp="1585551156456" />
+    <state x="743" y="311" width="428" height="481" key="FileChooserDialogImpl" timestamp="1585645494208">
+      <screen x="0" y="25" width="1920" height="1055" />
+    </state>
+    <state x="743" y="311" width="428" height="481" key="FileChooserDialogImpl/0.25.1920.1055@0.25.1920.1055" timestamp="1585645494208" />
+    <state x="456" y="188" key="SettingsEditor" timestamp="1585574937077">
+      <screen x="0" y="25" width="1920" height="1055" />
+    </state>
+    <state x="456" y="188" key="SettingsEditor/0.25.1920.1055@0.25.1920.1055" timestamp="1585574937077" />
+    <state x="557" y="163" width="800" height="778" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1585568428682">
+      <screen x="0" y="25" width="1920" height="1055" />
+    </state>
+    <state x="557" y="163" width="800" height="778" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1920.1055@0.25.1920.1055" timestamp="1585568428682" />
+  </component>
+</project>
